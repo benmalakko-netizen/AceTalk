@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>AceTalk | Messenger & Voice</title>
+    <title>AceTalk | Simple Messenger</title>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
@@ -13,6 +13,7 @@
             --call-green: #2ecc71;
             --call-red: #e74c3c;
             --call-gray: #7f8c8d;
+            --accent: #00ffcc;
         }
 
         * { box-sizing: border-box; border-radius: 0 !important; }
@@ -35,18 +36,13 @@
         @keyframes callFade { from { opacity: 0; } to { opacity: 1; } }
         .call-content { text-align: center; }
         .call-content h2 { font-weight: 700; color: var(--skype-blue); font-size: 32px; margin: 0; }
-        .call-content p { letter-spacing: 2px; margin: 15px 0 30px; opacity: 0.8; }
-        .call-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .call-controls { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
         .control-btn {
             background: var(--call-gray); color: white; border: none; padding: 12px 20px;
-            font-family: 'Ubuntu', sans-serif; font-weight: 700; cursor: pointer; font-size: 12px;
-            min-width: 100px;
+            font-weight: 700; cursor: pointer; font-size: 12px; min-width: 100px;
         }
         .control-btn.active-off { background: var(--call-red); }
-        .hangup-btn {
-            background: var(--call-red); color: white; border: none; padding: 15px 45px;
-            font-family: 'Ubuntu', sans-serif; font-weight: 700; cursor: pointer; font-size: 16px;
-        }
+        .hangup-btn { background: var(--call-red); color: white; border: none; padding: 15px 45px; font-weight: 700; cursor: pointer; }
 
         /* --- SPLASH --- */
         #splash-screen {
@@ -59,13 +55,12 @@
         .loaded #splash-screen { transform: translateY(-100%); }
 
         /* --- ANA UYGULAMA --- */
-        .app-container { 
-            display: flex; height: 100vh; width: 100vw; 
-            opacity: 0; transition: opacity 0.6s ease-in; transition-delay: 0.7s;
-        }
+        .app-container { display: flex; height: 100vh; width: 100vw; opacity: 0; transition: opacity 0.6s ease-in; transition-delay: 0.7s; }
         .loaded .app-container { opacity: 1; }
 
         .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 20px; border-right: 2px solid #1a252f; }
+        .right-sidebar { width: 180px; background: #243342; color: white; border-left: 2px solid #1a252f; padding: 15px; }
+        
         .brand-name { color: var(--skype-blue); font-size: 28px; font-weight: 700; margin: 0 0 25px; letter-spacing: -1px; }
 
         .lang-switcher { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 15px; }
@@ -73,13 +68,12 @@
         .lang-btn.active { background: var(--skype-blue); font-weight: 700; }
 
         .my-status { padding: 12px; background: rgba(0,0,0,0.2); font-size: 13px; margin-bottom: 15px; }
-        .profile-input { width: 100%; background: #34495e; border: none; color: #00ffcc; padding: 8px; margin-top: 5px; font-family: 'Ubuntu'; font-size: 12px; outline: none; }
+        .profile-input { width: 100%; background: #34495e; border: none; color: var(--accent); padding: 8px; margin-top: 5px; font-family: 'Ubuntu'; font-size: 12px; outline: none; }
 
         .id-input-group { margin-top: auto; display: flex; flex-direction: column; gap: 5px; }
-        .id-input-group label { font-size: 10px; opacity: 0.7; }
-        .id-input-group input { width: 100%; background: #1a252f; color: #00ffcc; border: 1px solid #111; padding: 8px; font-family: 'Ubuntu'; outline: none; }
+        .id-input-group input { width: 100%; background: #1a252f; color: var(--accent); border: 1px solid #111; padding: 8px; font-family: 'Ubuntu'; outline: none; }
         
-        .action-btn { width: 100%; padding: 10px; border: none; color: white; font-weight: 700; cursor: pointer; }
+        .action-btn { width: 100%; padding: 10px; border: none; color: white; font-weight: 700; cursor: pointer; margin-bottom: 5px; }
         .connect-btn { background: var(--skype-blue); }
         .call-btn { background: var(--call-green); }
 
@@ -92,8 +86,10 @@
         .remote { background: #f9f9f9; align-self: flex-start; border: 1px solid #ddd; }
 
         .input-area { padding: 20px; display: flex; gap: 5px; border-top: 1px solid #eee; background: white; }
-        input#message-input { flex: 1; padding: 12px; border: 1px solid #ddd; outline: none; font-family: 'Ubuntu'; }
+        input#message-input { flex: 1; padding: 12px; border: 1px solid #ddd; outline: none; }
         #send-btn { padding: 10px 25px; background: var(--skype-blue); color: white; border: none; font-weight: 700; cursor: pointer; }
+
+        .peer-item { font-size: 11px; padding: 5px; color: var(--accent); border-bottom: 1px solid #1a252f; }
     </style>
 </head>
 <body>
@@ -111,9 +107,9 @@
 </div>
 
 <div id="splash-screen">
-    <div class="splash-content" style="text-align: center;">
-        <h1 style="color: var(--skype-blue); font-weight: 700; font-size: 42px; margin: 0;">AceTalk</h1>
-        <p style="color: white; font-size: 11px; letter-spacing: 4px; margin-top: 10px;">VOICE & CHAT READY</p>
+    <div class="splash-content">
+        <h1 style="color: var(--skype-blue); font-weight: 700; font-size: 42px; margin: 0; text-align: center;">AceTalk</h1>
+        <p style="color: white; font-size: 11px; letter-spacing: 4px; margin-top: 10px; text-align: center;">SIMPLE MESSENGER</p>
     </div>
 </div>
 
@@ -129,13 +125,13 @@
         
         <div class="my-status">
             <b id="lbl-profile">PROFILIM:</b>
-            <input type="text" id="my-name-input" class="profile-input" placeholder="Adını yaz..." value="AceUser">
-            <small style="display:block; margin-top:10px;">ID: <span id="my-id">...</span></small>
+            <input type="text" id="my-name-input" class="profile-input" value="AceUser">
+            <small style="display:block; margin-top:10px;">ID: <span id="my-id" style="color:var(--skype-blue)">...</span></small>
         </div>
 
         <div class="id-input-group">
             <label id="lbl-target">HEDEF ID:</label>
-            <input type="text" id="peer-id-input" placeholder="ID...">
+            <input type="text" id="peer-id-input" placeholder="Peer ID...">
             <button class="action-btn connect-btn" id="connect-btn" onclick="connectToPeer()">BAĞLAN</button>
             <button class="action-btn call-btn" id="call-btn" onclick="startCall()">SESLİ ARA</button>
         </div>
@@ -149,6 +145,11 @@
             <button id="send-btn" onclick="sendMessage()">GÖNDER</button>
         </div>
     </div>
+
+    <div class="right-sidebar">
+        <small id="lbl-active-peers" style="color:var(--skype-blue); font-weight:700; font-size:10px;">AKTİF GRUP</small>
+        <div id="peer-list" style="margin-top:10px;"></div>
+    </div>
 </div>
 
 <audio id="remote-audio" autoplay></audio>
@@ -157,79 +158,67 @@
     window.addEventListener('load', () => setTimeout(() => document.body.classList.add('loaded'), 2000));
 
     const peer = new Peer();
-    let conn = null, currentCall = null, localStream = null;
+    let connections = {}; 
+    let currentCall = null, localStream = null;
     let isMuted = false, isDeafened = false, currentLang = 'tr';
 
     const langs = {
-        tr: { profile: "PROFILIM:", target: "HEDEF ID:", connect: "BAĞLAN", call: "SESLİ ARA", input: "Mesaj yaz...", send: "GÖNDER", hint: "Hadi bir şey yaz...", inCall: "GÖRÜŞME SÜRÜYOR", hangup: "KAPAT", micOn: "MIK: AÇIK", micOff: "MIK: KAPALI", volOn: "SES: AÇIK", volOff: "SES: KAPALI", sys: "Sistem", connected: "Bağlandı." },
-        en: { profile: "MY PROFILE:", target: "TARGET ID:", connect: "CONNECT", call: "VOICE CALL", input: "Type a message...", send: "SEND", hint: "Say something...", inCall: "ON CALL", hangup: "HANG UP", micOn: "MIC: ON", micOff: "MIC: OFF", volOn: "VOL: ON", volOff: "VOL: OFF", sys: "System", connected: "Connected." },
-        de: { profile: "MEIN PROFIL:", target: "ZIEL ID:", connect: "VERBINDEN", call: "ANRUFEN", input: "Nachricht...", send: "SENDEN", hint: "Schreib etwas...", inCall: "IM GESPRÄCH", hangup: "AUFLEGEN", micOn: "MIK: AN", micOff: "MIK: AUS", volOn: "TON: AN", volOff: "TON: AUS", sys: "System", connected: "Verbunden." },
-        ru: { profile: "МОЙ ПРОФИЛЬ:", target: "ID ЦЕЛИ:", connect: "ПОДКЛЮЧИТЬСЯ", call: "ЗВОНОK", input: "Введите...", send: "ОТПРАВИТЬ", hint: "Напишите...", inCall: "В РАЗГОВОРЕ", hangup: "ЗАВЕРШИТЬ", micOn: "МИК: ВКЛ", micOff: "МИК: ВЫКЛ", volOn: "ЗВУК: ВКЛ", volOff: "ЗВУК: ВЫКЛ", sys: "Система", connected: "Подключено." }
+        tr: { profile: "PROFILIM:", target: "HEDEF ID:", connect: "BAĞLAN", call: "SESLİ ARA", input: "Mesaj yaz...", send: "GÖNDER", hint: "Hadi bir şey yaz...", inCall: "GÖRÜŞME SÜRÜYOR", hangup: "KAPAT", micOn: "MIK: AÇIK", micOff: "MIK: KAPALI", volOn: "SES: AÇIK", volOff: "SES: KAPALI", sys: "Sistem", connected: "Bağlandı.", activePeers: "AKTİF GRUP" },
+        en: { profile: "MY PROFILE:", target: "TARGET ID:", connect: "CONNECT", call: "VOICE CALL", input: "Type a message...", send: "SEND", hint: "Say something...", inCall: "ON CALL", hangup: "HANG UP", micOn: "MIC: ON", micOff: "MIC: OFF", volOn: "VOL: ON", volOff: "VOL: OFF", sys: "System", connected: "Connected.", activePeers: "ACTIVE GROUP" },
+        de: { profile: "MEIN PROFIL:", target: "ZIEL ID:", connect: "VERBINDEN", call: "ANRUFEN", input: "Nachricht...", send: "SENDEN", hint: "Schreib etwas...", inCall: "IM GESPRÄCH", hangup: "AUFLEGEN", micOn: "MIK: AN", micOff: "MIK: AUS", volOn: "TON: AN", volOff: "TON: AUS", sys: "System", connected: "Verbunden.", activePeers: "AKTIVE GRUPPE" },
+        ru: { profile: "МОЙ ПРОФИЛЬ:", target: "ID ЦЕЛИ:", connect: "ПОДКЛЮЧИТЬСЯ", call: "ЗВОНОK", input: "Введите...", send: "ОТПРАВИТЬ", hint: "Напишите...", inCall: "В РАЗГОВОРЕ", hangup: "ЗАВЕРШИТЬ", micOn: "МИК: ВКЛ", micOff: "МИК: ВЫКЛ", volOn: "ЗВУК: ВКЛ", volOff: "ЗВУК: ВЫКЛ", sys: "Система", connected: "Подключено.", activePeers: "АКТИВНАЯ ГРУППА" }
     };
 
     peer.on('open', id => document.getElementById('my-id').innerText = id);
-    peer.on('connection', newConn => { conn = newConn; initConn(); });
+    peer.on('connection', newConn => setupConnection(newConn));
 
     function connectToPeer() {
         const pid = document.getElementById('peer-id-input').value;
-        if(!pid) return;
-        conn = peer.connect(pid);
-        initConn();
+        if(!pid || connections[pid]) return;
+        setupConnection(peer.connect(pid));
+        document.getElementById('peer-id-input').value = "";
     }
 
-    function initConn() {
-        conn.on('open', () => addMessage(langs[currentLang].sys, langs[currentLang].connected, "remote"));
-        conn.on('data', data => {
-            if(typeof data === 'object') addMessage(data.name, data.msg, "remote");
-            else addMessage("AceTalker", data, "remote");
+    function setupConnection(c) {
+        c.on('open', () => {
+            connections[c.peer] = c;
+            updatePeerList();
+            addMessage(langs[currentLang].sys, `${c.peer.substring(0,5)}... ${langs[currentLang].connected}`, "remote");
         });
-    }
-
-    peer.on('call', call => {
-        navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
-            localStream = stream; openCallOverlay(); call.answer(stream); currentCall = call;
-            call.on('stream', rs => document.getElementById('remote-audio').srcObject = rs);
+        c.on('data', data => {
+            if(data.type === 'chat') addMessage(data.name, data.msg, "remote");
         });
-    });
-
-    function startCall() {
-        const pid = document.getElementById('peer-id-input').value;
-        if(!pid) return;
-        navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
-            localStream = stream; openCallOverlay(); currentCall = peer.call(pid, stream);
-            currentCall.on('stream', rs => document.getElementById('remote-audio').srcObject = rs);
-        }).catch(() => { alert("Mic Error!"); closeCallOverlay(); });
+        c.on('close', () => {
+            delete connections[c.peer];
+            updatePeerList();
+        });
     }
 
     function sendMessage() {
         const i = document.getElementById('message-input'), myName = document.getElementById('my-name-input').value;
-        if(conn && conn.open && i.value) {
-            conn.send({ name: myName, msg: i.value });
-            addMessage("", i.value, "local"); // İsim silindi (Sadece mesaj gider)
-            i.value = "";
-        }
+        if(!i.value) return;
+        const payload = { type: 'chat', name: myName, msg: i.value };
+        Object.values(connections).forEach(c => { if(c.open) c.send(payload); });
+        addMessage("", i.value, "local");
+        i.value = "";
+    }
+
+    function updatePeerList() {
+        const list = document.getElementById('peer-list');
+        list.innerHTML = "";
+        Object.keys(connections).forEach(id => {
+            list.innerHTML += `<div class="peer-item">● ${id.substring(0,8)}...</div>`;
+        });
     }
 
     function addMessage(u, t, type) {
         const h = document.getElementById('empty-hint'); if(h) h.remove();
         const b = document.getElementById('chat-box');
-        // Kullanıcı adı varsa göster, yoksa (yani bizim gönderdiğimiz mesajsa) sadece metni göster
         const header = u ? `<strong>${u}:</strong> ` : "";
         b.innerHTML += `<div class="msg ${type}">${header}${t}</div>`;
         b.scrollTop = b.scrollHeight;
     }
 
-    function toggleMute() {
-        if(localStream) { isMuted = !isMuted; localStream.getAudioTracks()[0].enabled = !isMuted; updateBtnStates(); }
-    }
-    function toggleDeafen() {
-        isDeafened = !isDeafened; document.getElementById('remote-audio').muted = isDeafened; updateBtnStates();
-    }
-    function updateBtnStates() {
-        const m = document.getElementById('btn-mute'), d = document.getElementById('btn-deafen'), l = langs[currentLang];
-        m.innerText = isMuted ? l.micOff : l.micOn; m.className = isMuted ? "control-btn active-off" : "control-btn";
-        d.innerText = isDeafened ? l.volOff : l.volOn; d.className = isDeafened ? "control-btn active-off" : "control-btn";
-    }
     function setLanguage(lang) {
         currentLang = lang;
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -242,12 +231,37 @@
         document.getElementById('send-btn').innerText = l.send;
         document.getElementById('message-input').placeholder = l.input;
         document.getElementById('btn-hangup').innerText = l.hangup;
+        document.getElementById('lbl-active-peers').innerText = l.activePeers;
         if(document.getElementById('empty-hint')) document.getElementById('empty-hint').innerText = l.hint;
         updateBtnStates();
     }
+
+    peer.on('call', call => {
+        navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
+            localStream = stream; openCallOverlay(); call.answer(stream); currentCall = call;
+            call.on('stream', rs => document.getElementById('remote-audio').srcObject = rs);
+        });
+    });
+
+    function startCall() {
+        const pid = document.getElementById('peer-id-input').value || Object.keys(connections)[0];
+        if(!pid) return;
+        navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
+            localStream = stream; openCallOverlay(); currentCall = peer.call(pid, stream);
+            currentCall.on('stream', rs => document.getElementById('remote-audio').srcObject = rs);
+        });
+    }
+
+    function toggleMute() { if(localStream) { isMuted = !isMuted; localStream.getAudioTracks()[0].enabled = !isMuted; updateBtnStates(); } }
+    function toggleDeafen() { isDeafened = !isDeafened; document.getElementById('remote-audio').muted = isDeafened; updateBtnStates(); }
+    function updateBtnStates() {
+        const m = document.getElementById('btn-mute'), d = document.getElementById('btn-deafen'), l = langs[currentLang];
+        m.innerText = isMuted ? l.micOff : l.micOn; m.className = isMuted ? "control-btn active-off" : "control-btn";
+        d.innerText = isDeafened ? l.volOff : l.volOn; d.className = isDeafened ? "control-btn active-off" : "control-btn";
+    }
     function endCall() { if(currentCall) currentCall.close(); if(localStream) localStream.getTracks().forEach(t => t.stop()); closeCallOverlay(); }
     function openCallOverlay() { document.getElementById('call-overlay').style.display = 'flex'; updateBtnStates(); }
-    function closeCallOverlay() { document.getElementById('call-overlay').style.display = 'none'; isMuted = false; isDeafened = false; }
+    function closeCallOverlay() { document.getElementById('call-overlay').style.display = 'none'; }
 </script>
 </body>
 </html>
