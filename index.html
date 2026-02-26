@@ -11,9 +11,10 @@
             --sidebar-bg: #2c3e50;
             --chat-bg: #ffffff;
             --call-green: #2ecc71;
+            --call-red: #e74c3c;
+            --call-gray: #7f8c8d;
         }
 
-        /* TÜM YUMUŞATMALAR İPTAL - TAM SİVRİ */
         * { box-sizing: border-box; border-radius: 0 !important; }
 
         body, html {
@@ -23,7 +24,31 @@
             background-color: var(--sidebar-bg);
         }
 
-        /* --- DÜZELTİLEN SARSINTISIZ SPLASH --- */
+        /* --- ARAMA PANELİ --- */
+        #call-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 37, 47, 0.98);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10000; color: white;
+            animation: callFade 0.3s ease;
+        }
+        @keyframes callFade { from { opacity: 0; } to { opacity: 1; } }
+        .call-content { text-align: center; }
+        .call-content h2 { font-weight: 700; color: var(--skype-blue); font-size: 32px; margin: 0; }
+        .call-content p { letter-spacing: 2px; margin: 15px 0 30px; opacity: 0.8; }
+        .call-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .control-btn {
+            background: var(--call-gray); color: white; border: none; padding: 12px 20px;
+            font-family: 'Ubuntu', sans-serif; font-weight: 700; cursor: pointer; font-size: 12px;
+            min-width: 100px;
+        }
+        .control-btn.active-off { background: var(--call-red); }
+        .hangup-btn {
+            background: var(--call-red); color: white; border: none; padding: 15px 45px;
+            font-family: 'Ubuntu', sans-serif; font-weight: 700; cursor: pointer; font-size: 16px;
+        }
+
+        /* --- SPLASH --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--sidebar-bg);
@@ -31,119 +56,91 @@
             z-index: 9999;
             transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
         }
-        .splash-content { text-align: center; transition: opacity 0.4s ease; }
-        
-        /* Perde kalkarken içeriğin duruşu */
         .loaded #splash-screen { transform: translateY(-100%); }
-        .loaded .splash-content { opacity: 0; }
 
-        /* --- ANA UYGULAMA (Gecikmeli ve Yumuşak Belirme) --- */
+        /* --- ANA UYGULAMA --- */
         .app-container { 
             display: flex; height: 100vh; width: 100vw; 
-            opacity: 0; 
-            transition: opacity 0.6s ease-in;
-            transition-delay: 0.7s; /* Perde iyice yükselmeden içerik görünmez */
+            opacity: 0; transition: opacity 0.6s ease-in; transition-delay: 0.7s;
         }
         .loaded .app-container { opacity: 1; }
 
-        /* SIDEBAR */
-        .sidebar {
-            width: 280px; background: var(--sidebar-bg); color: white;
-            display: flex; flex-direction: column; padding: 20px;
-            border-right: 2px solid #1a252f;
-        }
+        .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 20px; border-right: 2px solid #1a252f; }
+        .brand-name { color: var(--skype-blue); font-size: 28px; font-weight: 700; margin: 0 0 25px; letter-spacing: -1px; }
 
-        .brand-container { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; }
-        .brand-logo { width: 50px; height: 50px; object-fit: contain; }
-        .brand-name { color: var(--skype-blue); font-size: 28px; font-weight: 700; margin: 0; letter-spacing: -1px; }
-
-        /* DÜZELTİLEN TİTREMEYEN DİL BUTONLARI */
         .lang-switcher { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 15px; }
-        .lang-btn {
-            padding: 8px; background: #34495e; border: 1px solid #1a252f;
-            color: white; cursor: pointer; font-size: 11px; font-family: 'Ubuntu', sans-serif;
-            min-width: 60px;
-            transition: background 0.3s, color 0.3s; /* Font-weight animasyonu titreme yaptığı için sabitlendi */
-            font-weight: 300;
-        }
-        .lang-btn.active { 
-            background: var(--skype-blue); 
-            border-color: var(--skype-blue); 
-            font-weight: 700;
-        }
+        .lang-btn { padding: 8px; background: #34495e; border: 1px solid #1a252f; color: white; cursor: pointer; font-size: 11px; }
+        .lang-btn.active { background: var(--skype-blue); font-weight: 700; }
 
-        .my-status {
-            padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid #1a252f;
-            font-size: 13px; margin-bottom: 15px;
-        }
+        .my-status { padding: 12px; background: rgba(0,0,0,0.2); font-size: 13px; margin-bottom: 15px; }
+        .profile-input { width: 100%; background: #34495e; border: none; color: #00ffcc; padding: 8px; margin-top: 5px; font-family: 'Ubuntu'; font-size: 12px; outline: none; }
 
         .id-input-group { margin-top: auto; display: flex; flex-direction: column; gap: 5px; }
-        .id-input-group input { 
-            width: 100%; background: #1a252f; color: #00ffcc; border: 1px solid #111; padding: 8px; 
-            font-family: 'Ubuntu', sans-serif; font-weight: 300;
-        }
+        .id-input-group label { font-size: 10px; opacity: 0.7; }
+        .id-input-group input { width: 100%; background: #1a252f; color: #00ffcc; border: 1px solid #111; padding: 8px; font-family: 'Ubuntu'; outline: none; }
         
-        .action-btn { 
-            width: 100%; padding: 10px; border: none; color: white; 
-            font-weight: 700; cursor: pointer; font-family: 'Ubuntu', sans-serif; 
-        }
+        .action-btn { width: 100%; padding: 10px; border: none; color: white; font-weight: 700; cursor: pointer; }
         .connect-btn { background: var(--skype-blue); }
         .call-btn { background: var(--call-green); }
 
         .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); position: relative; }
         #chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        
-        #empty-hint {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: #ccc; font-size: 20px; text-align: center; pointer-events: none;
-        }
+        #empty-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ccc; font-size: 20px; pointer-events: none; }
 
-        .msg { max-width: 70%; padding: 10px 15px; font-size: 15px; border: 1px solid #eee; line-height: 1.5; }
+        .msg { max-width: 70%; padding: 10px 15px; border: 1px solid #eee; line-height: 1.5; }
         .local { background: #f0faff; align-self: flex-end; border: 1px solid var(--skype-blue); }
         .remote { background: #f9f9f9; align-self: flex-start; border: 1px solid #ddd; }
 
         .input-area { padding: 20px; display: flex; gap: 5px; border-top: 1px solid #eee; background: white; }
-        input[type="text"]#message-input { flex: 1; padding: 12px; border: 1px solid #ddd; font-family: 'Ubuntu', sans-serif; font-weight: 300; outline: none; }
+        input#message-input { flex: 1; padding: 12px; border: 1px solid #ddd; outline: none; font-family: 'Ubuntu'; }
         #send-btn { padding: 10px 25px; background: var(--skype-blue); color: white; border: none; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
 
+<div id="call-overlay">
+    <div class="call-content">
+        <h2>AceTalk Voice</h2>
+        <p id="call-status-text">ARANIYOR...</p>
+        <div class="call-controls">
+            <button id="btn-mute" class="control-btn" onclick="toggleMute()">MIK: AÇIK</button>
+            <button id="btn-deafen" class="control-btn" onclick="toggleDeafen()">SES: AÇIK</button>
+        </div>
+        <button class="hangup-btn" id="btn-hangup" onclick="endCall()">KAPAT</button>
+    </div>
+</div>
+
 <div id="splash-screen">
-    <div class="splash-content">
-        <img src="logo.png" alt="" style="width: 80px; height: 80px; margin-bottom: 15px;" onerror="this.style.display='none'">
-        <h1 style="color: var(--skype-blue); font-weight: 700; font-size: 36px; margin: 0;">AceTalk</h1>
-        <p style="color: white; font-size: 10px; letter-spacing: 4px; margin-top: 10px;">VOICE & CHAT READY</p>
+    <div class="splash-content" style="text-align: center;">
+        <h1 style="color: var(--skype-blue); font-weight: 700; font-size: 42px; margin: 0;">AceTalk</h1>
+        <p style="color: white; font-size: 11px; letter-spacing: 4px; margin-top: 10px;">VOICE & CHAT READY</p>
     </div>
 </div>
 
 <div class="app-container">
     <div class="sidebar">
-        <div class="brand-container">
-            <img src="logo.png" alt="Logo" class="brand-logo" onerror="this.style.opacity='0'">
-            <h1 class="brand-name">AceTalk</h1>
-        </div>
-
+        <h1 class="brand-name">AceTalk</h1>
         <div class="lang-switcher">
             <button id="btn-tr" class="lang-btn active" onclick="setLanguage('tr')">TR</button>
             <button id="btn-en" class="lang-btn" onclick="setLanguage('en')">EN</button>
             <button id="btn-de" class="lang-btn" onclick="setLanguage('de')">DE</button>
             <button id="btn-ru" class="lang-btn" onclick="setLanguage('ru')">RU</button>
         </div>
-
+        
         <div class="my-status">
-            <b id="lbl-status">DURUM:</b> <span id="lbl-online">Çevrimiçi</span> <br>
-            <small>ID: <span id="my-id">...</span></small>
+            <b id="lbl-profile">PROFILIM:</b>
+            <input type="text" id="my-name-input" class="profile-input" placeholder="Adını yaz..." value="AceUser">
+            <small style="display:block; margin-top:10px;">ID: <span id="my-id">...</span></small>
         </div>
 
         <div class="id-input-group">
-            <label id="lbl-connect-to" style="font-size: 10px;">HEDEF ID:</label>
+            <label id="lbl-target">HEDEF ID:</label>
             <input type="text" id="peer-id-input" placeholder="ID...">
             <button class="action-btn connect-btn" id="connect-btn" onclick="connectToPeer()">BAĞLAN</button>
             <button class="action-btn call-btn" id="call-btn" onclick="startCall()">SESLİ ARA</button>
         </div>
     </div>
-
+    
     <div class="main-chat">
         <div id="empty-hint">Hadi bir şey yaz...</div>
         <div id="chat-box"></div>
@@ -159,105 +156,96 @@
 <script>
     window.addEventListener('load', () => setTimeout(() => document.body.classList.add('loaded'), 2000));
 
-    let peer = new Peer();
-    let conn;
-    let currentLang = 'tr';
+    const peer = new Peer();
+    let conn = null, currentCall = null, localStream = null;
+    let isMuted = false, isDeafened = false, currentLang = 'tr';
 
     const langs = {
-        tr: {
-            status: "DURUM:", online: "Çevrimiçi", connect: "HEDEF ID:", connectBtn: "BAĞLAN", callBtn: "SESLİ ARA",
-            hint: "Hadi bir şey yaz...", input: "Mesaj yaz...", send: "GÖNDER",
-            system: "Sistem", unknown: "Bilinmeyen kişi", you: "Sen", connected: "Bağlantı kuruldu.", calling: "Aranıyor..."
-        },
-        en: {
-            status: "STATUS:", online: "Online", connect: "TARGET ID:", connectBtn: "CONNECT", callBtn: "VOICE CALL",
-            hint: "Say something...", input: "Type a message...", send: "SEND",
-            system: "System", unknown: "Unknown person", you: "You", connected: "Connected.", calling: "Calling..."
-        },
-        de: {
-            status: "STATUS:", online: "Online", connect: "ZIEL ID:", connectBtn: "VERBINDEN", callBtn: "ANRUFEN",
-            hint: "Schreib etwas...", input: "Nachricht schreiben...", send: "SENDEN",
-            system: "System", unknown: "Unbekannte Person", you: "Du", connected: "Verbunden.", calling: "Anrufen..."
-        },
-        ru: {
-            status: "СТАТУС:", online: "В сети", connect: "ID ЦЕЛИ:", connectBtn: "ПОДКЛЮЧИТЬСЯ", callBtn: "ПОЗВОНИТЬ",
-            hint: "Напишите что-нибудь...", input: "Введите сообщение...", send: "ОТПРАВИТЬ",
-            system: "Система", unknown: "Неизвестный", you: "Вы", connected: "Соединение установлено."
-        }
+        tr: { profile: "PROFILIM:", target: "HEDEF ID:", connect: "BAĞLAN", call: "SESLİ ARA", input: "Mesaj yaz...", send: "GÖNDER", hint: "Hadi bir şey yaz...", inCall: "GÖRÜŞME SÜRÜYOR", hangup: "KAPAT", micOn: "MIK: AÇIK", micOff: "MIK: KAPALI", volOn: "SES: AÇIK", volOff: "SES: KAPALI", sys: "Sistem", connected: "Bağlandı." },
+        en: { profile: "MY PROFILE:", target: "TARGET ID:", connect: "CONNECT", call: "VOICE CALL", input: "Type a message...", send: "SEND", hint: "Say something...", inCall: "ON CALL", hangup: "HANG UP", micOn: "MIC: ON", micOff: "MIC: OFF", volOn: "VOL: ON", volOff: "VOL: OFF", sys: "System", connected: "Connected." },
+        de: { profile: "MEIN PROFIL:", target: "ZIEL ID:", connect: "VERBINDEN", call: "ANRUFEN", input: "Nachricht...", send: "SENDEN", hint: "Schreib etwas...", inCall: "IM GESPRÄCH", hangup: "AUFLEGEN", micOn: "MIK: AN", micOff: "MIK: AUS", volOn: "TON: AN", volOff: "TON: AUS", sys: "System", connected: "Verbunden." },
+        ru: { profile: "МОЙ ПРОФИЛЬ:", target: "ID ЦЕЛИ:", connect: "ПОДКЛЮЧИТЬСЯ", call: "ЗВОНОK", input: "Введите...", send: "ОТПРАВИТЬ", hint: "Напишите...", inCall: "В РАЗГОВОРЕ", hangup: "ЗАВЕРШИТЬ", micOn: "МИК: ВКЛ", micOff: "МИК: ВЫКЛ", volOn: "ЗВУК: ВКЛ", volOff: "ЗВУК: ВЫКЛ", sys: "Система", connected: "Подключено." }
     };
 
-    function setLanguage(lang) {
-        currentLang = lang;
-        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('btn-' + lang).classList.add('active');
-        document.getElementById('lbl-status').innerText = langs[lang].status;
-        document.getElementById('lbl-online').innerText = langs[lang].online;
-        document.getElementById('lbl-connect-to').innerText = langs[lang].connect;
-        document.getElementById('connect-btn').innerText = langs[lang].connectBtn;
-        document.getElementById('call-btn').innerText = langs[lang].callBtn;
-        document.getElementById('send-btn').innerText = langs[lang].send;
-        document.getElementById('message-input').placeholder = langs[lang].input;
-        if(document.getElementById('empty-hint')) document.getElementById('empty-hint').innerText = langs[lang].hint;
+    peer.on('open', id => document.getElementById('my-id').innerText = id);
+
+    peer.on('connection', newConn => { conn = newConn; initConn(); });
+
+    function connectToPeer() {
+        const pid = document.getElementById('peer-id-input').value;
+        if(!pid) return;
+        conn = peer.connect(pid);
+        initConn();
     }
 
-    peer.on('open', id => document.getElementById('my-id').innerText = id);
-    peer.on('connection', c => { conn = c; setupChat(); });
+    function initConn() {
+        conn.on('open', () => addMessage(langs[currentLang].sys, langs[currentLang].connected, "remote"));
+        conn.on('data', data => {
+            if(typeof data === 'object') addMessage(data.name, data.msg, "remote");
+            else addMessage("AceTalker", data, "remote");
+        });
+    }
 
     peer.on('call', call => {
-        navigator.mediaDevices.getUserMedia({video: false, audio: true}).then(stream => {
-            call.answer(stream);
-            call.on('stream', remoteStream => {
-                document.getElementById('remote-audio').srcObject = remoteStream;
-            });
-            addMessage(langs[currentLang].system, "Sesli arama bağlandı.", "remote", true);
+        navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
+            localStream = stream; openCallOverlay(); call.answer(stream); currentCall = call;
+            call.on('stream', rs => document.getElementById('remote-audio').srcObject = rs);
         });
     });
 
-    function connectToPeer() {
-        const peerId = document.getElementById('peer-id-input').value;
-        if(!peerId) return;
-        conn = peer.connect(peerId);
-        setupChat();
-    }
-
     function startCall() {
-        const peerId = document.getElementById('peer-id-input').value;
-        if(!peerId) return;
-        navigator.mediaDevices.getUserMedia({video: false, audio: true}).then(stream => {
-            const call = peer.call(peerId, stream);
-            addMessage(langs[currentLang].system, langs[currentLang].calling, "local", true);
-            call.on('stream', remoteStream => {
-                document.getElementById('remote-audio').srcObject = remoteStream;
-            });
-        }).catch(err => { alert("Mikrofon izni verilmedi!"); });
-    }
-
-    function setupChat() {
-        conn.on('open', () => {
-            addMessage(langs[currentLang].system, langs[currentLang].connected, "remote", true);
-            conn.on('data', data => addMessage(langs[currentLang].unknown, data, "remote"));
-        });
+        const pid = document.getElementById('peer-id-input').value;
+        if(!pid) return;
+        navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
+            localStream = stream; openCallOverlay(); currentCall = peer.call(pid, stream);
+            currentCall.on('stream', rs => document.getElementById('remote-audio').srcObject = rs);
+        }).catch(() => { alert("Mic Error!"); closeCallOverlay(); });
     }
 
     function sendMessage() {
-        const input = document.getElementById('message-input');
-        if (conn && conn.open && input.value) {
-            conn.send(input.value);
-            addMessage(langs[currentLang].you, input.value, "local");
-            input.value = "";
+        const i = document.getElementById('message-input'), myName = document.getElementById('my-name-input').value;
+        if(conn && conn.open && i.value) {
+            conn.send({ name: myName, msg: i.value });
+            addMessage("Sen", i.value, "local"); i.value = "";
         }
     }
 
-    function addMessage(user, text, type, isSystem = false) {
-        if (!isSystem) {
-            const hint = document.getElementById('empty-hint');
-            if(hint) hint.remove();
-        }
-        const chatBox = document.getElementById('chat-box');
-        chatBox.innerHTML += `<div class="msg ${type}"><strong>${user}:</strong> ${text}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
+    function addMessage(u, t, type) {
+        const h = document.getElementById('empty-hint'); if(h) h.remove();
+        const b = document.getElementById('chat-box');
+        b.innerHTML += `<div class="msg ${type}"><strong>${u}:</strong> ${t}</div>`;
+        b.scrollTop = b.scrollHeight;
     }
+
+    function toggleMute() {
+        if(localStream) { isMuted = !isMuted; localStream.getAudioTracks()[0].enabled = !isMuted; updateBtnStates(); }
+    }
+    function toggleDeafen() {
+        isDeafened = !isDeafened; document.getElementById('remote-audio').muted = isDeafened; updateBtnStates();
+    }
+    function updateBtnStates() {
+        const m = document.getElementById('btn-mute'), d = document.getElementById('btn-deafen'), l = langs[currentLang];
+        m.innerText = isMuted ? l.micOff : l.micOn; m.className = isMuted ? "control-btn active-off" : "control-btn";
+        d.innerText = isDeafened ? l.volOff : l.volOn; d.className = isDeafened ? "control-btn active-off" : "control-btn";
+    }
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-'+lang).classList.add('active');
+        const l = langs[lang];
+        document.getElementById('lbl-profile').innerText = l.profile;
+        document.getElementById('lbl-target').innerText = l.target;
+        document.getElementById('connect-btn').innerText = l.connect;
+        document.getElementById('call-btn').innerText = l.call;
+        document.getElementById('send-btn').innerText = l.send;
+        document.getElementById('message-input').placeholder = l.input;
+        document.getElementById('btn-hangup').innerText = l.hangup;
+        if(document.getElementById('empty-hint')) document.getElementById('empty-hint').innerText = l.hint;
+        updateBtnStates();
+    }
+    function endCall() { if(currentCall) currentCall.close(); if(localStream) localStream.getTracks().forEach(t => t.stop()); closeCallOverlay(); }
+    function openCallOverlay() { document.getElementById('call-overlay').style.display = 'flex'; updateBtnStates(); }
+    function closeCallOverlay() { document.getElementById('call-overlay').style.display = 'none'; isMuted = false; isDeafened = false; }
 </script>
-
 </body>
 </html>
