@@ -168,7 +168,6 @@
     };
 
     peer.on('open', id => document.getElementById('my-id').innerText = id);
-
     peer.on('connection', newConn => { conn = newConn; initConn(); });
 
     function connectToPeer() {
@@ -206,14 +205,17 @@
         const i = document.getElementById('message-input'), myName = document.getElementById('my-name-input').value;
         if(conn && conn.open && i.value) {
             conn.send({ name: myName, msg: i.value });
-            addMessage("Sen", i.value, "local"); i.value = "";
+            addMessage("", i.value, "local"); // İsim silindi (Sadece mesaj gider)
+            i.value = "";
         }
     }
 
     function addMessage(u, t, type) {
         const h = document.getElementById('empty-hint'); if(h) h.remove();
         const b = document.getElementById('chat-box');
-        b.innerHTML += `<div class="msg ${type}"><strong>${u}:</strong> ${t}</div>`;
+        // Kullanıcı adı varsa göster, yoksa (yani bizim gönderdiğimiz mesajsa) sadece metni göster
+        const header = u ? `<strong>${u}:</strong> ` : "";
+        b.innerHTML += `<div class="msg ${type}">${header}${t}</div>`;
         b.scrollTop = b.scrollHeight;
     }
 
