@@ -41,8 +41,13 @@
         .brand-name { color: var(--skype-blue); font-size: 32px; font-weight: 700; margin: 0; }
         .sidebar-slogan { font-size: 10px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 2px; }
 
-        .my-status-box { background: rgba(0,0,0,0.2); padding: 15px; margin-bottom: 20px; border-left: 3px solid var(--skype-blue); }
+        .my-status-box { background: rgba(0,0,0,0.2); padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--skype-blue); }
         .status-input { width: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 14px; outline: none; border-bottom: 1px solid #34495e; padding-bottom: 5px; }
+
+        /* DİL SEÇİCİ STİLİ */
+        .lang-switcher { display: flex; gap: 5px; margin-bottom: 20px; }
+        .lang-btn { flex: 1; background: #1a252f; border: none; color: #7f8c8d; font-size: 10px; padding: 5px; cursor: pointer; font-weight: bold; }
+        .lang-btn.active { color: white; border-bottom: 2px solid var(--skype-blue); }
 
         /* --- SOHBET ALANI --- */
         .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); position: relative; }
@@ -93,8 +98,8 @@
 <div id="call-overlay">
     <div style="font-size: 60px; margin-bottom: 20px;">📞</div>
     <h2 id="call-name">AceTalk Voice</h2>
-    <p id="call-status">ARANIYOR...</p>
-    <button onclick="endCall()" style="background: var(--call-red); color: white; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; margin-top: 30px;">KAPAT</button>
+    <p id="call-status" data-i18n="calling">ARANIYOR...</p>
+    <button onclick="endCall()" data-i18n="closeCall" style="background: var(--call-red); color: white; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; margin-top: 30px;">KAPAT</button>
 </div>
 
 <div id="splash-screen">
@@ -110,24 +115,31 @@
             <div class="sidebar-slogan">Simple Messenger</div>
         </div>
 
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLanguage('tr')">TR</button>
+            <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
+            <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+        </div>
+
         <div class="my-status-box">
-            <b style="font-size: 10px; color: var(--skype-blue);">ADIM</b>
+            <b style="font-size: 10px; color: var(--skype-blue);" data-i18n="myName">ADIM</b>
             <input type="text" id="my-name-input" class="status-input" value="AceUser" onchange="updateMyProfile()">
             <small style="display:block; margin-top:15px; font-size: 9px; color: #7f8c8d;">ID: <span id="my-id" style="color: #00ffcc;">...</span></small>
         </div>
 
         <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
-            <input type="text" id="peer-id-input" placeholder="Bağlanılacak ID..." style="background: #1a252f; border: 1px solid #34495e; padding: 10px; color: white; outline: none;">
-            <button onclick="connectToPeer()" style="background: var(--skype-blue); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">BAĞLAN</button>
-            <button onclick="startCall()" style="background: var(--call-green); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">SESLİ ARA</button>
+            <input type="text" id="peer-id-input" data-i18n-placeholder="idPlaceholder" placeholder="Bağlanılacak ID..." style="background: #1a252f; border: 1px solid #34495e; padding: 10px; color: white; outline: none;">
+            <button onclick="connectToPeer()" data-i18n="connectBtn" style="background: var(--skype-blue); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">BAĞLAN</button>
+            <button onclick="startCall()" data-i18n="voiceCall" style="background: var(--call-green); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">SESLİ ARA</button>
         </div>
     </div>
 
     <div class="main-chat" id="drop-zone">
         <div id="chat-box">
-            <div style="margin: auto; text-align: center; color: #ccc;">
-                <p>Güvenli ve şifreli uçtan uca sohbet.</p>
-                <small>Bağlanmak için bir ID girin.</small>
+            <div id="welcome-msg" style="margin: auto; text-align: center; color: #ccc;">
+                <p data-i18n="secureChat">Güvenli ve şifreli uçtan uca sohbet.</p>
+                <small data-i18n="enterId">Bağlanmak için bir ID girin.</small>
             </div>
         </div>
         
@@ -141,7 +153,7 @@
             </label>
             <input type="file" id="img-input" accept="image/*" style="display:none" onchange="handleImage(this)">
             
-            <input type="text" id="message-input" placeholder="Mesajınızı yazın..." 
+            <input type="text" id="message-input" data-i18n-placeholder="msgPlaceholder" placeholder="Mesajınızı yazın..." 
                    onkeypress="if(event.key==='Enter') sendMessage()"
                    oninput="notifyTyping()">
             
@@ -150,7 +162,7 @@
     </div>
 
     <div class="right-bar">
-        <div class="online-title">ÇEVRİMİÇİ <span class="online-count" id="conn-count">0</span></div>
+        <div class="online-title"><span data-i18n="online">ÇEVRİMİÇİ</span> <span class="online-count" id="conn-count">0</span></div>
         <div id="online-list"></div>
     </div>
 </div>
@@ -158,6 +170,89 @@
 <audio id="remote-audio" autoplay></audio>
 
 <script>
+    // --- ÇOKLU DİL SİSTEMİ ---
+    const i18n = {
+        tr: {
+            myName: "ADIM",
+            idPlaceholder: "Bağlanılacak ID...",
+            connectBtn: "BAĞLAN",
+            voiceCall: "SESLİ ARA",
+            secureChat: "Güvenli ve şifreli uçtan uca sohbet.",
+            enterId: "Bağlanmak için bir ID girin.",
+            msgPlaceholder: "Mesajınızı yazın...",
+            online: "ÇEVRİMİÇİ",
+            calling: "ARANIYOR...",
+            closeCall: "KAPAT",
+            typing: "yazıyor...",
+            callAlert: "Arama geliyor!"
+        },
+        en: {
+            myName: "MY NAME",
+            idPlaceholder: "ID to connect...",
+            connectBtn: "CONNECT",
+            voiceCall: "VOICE CALL",
+            secureChat: "Secure and end-to-end encrypted chat.",
+            enterId: "Enter an ID to connect.",
+            msgPlaceholder: "Type your message...",
+            online: "ONLINE",
+            calling: "CALLING...",
+            closeCall: "HANG UP",
+            typing: "is typing...",
+            callAlert: "Incoming call!"
+        },
+        ru: {
+            myName: "МОЕ ИМЯ",
+            idPlaceholder: "ID для связи...",
+            connectBtn: "ПОДКЛЮЧИТЬ",
+            voiceCall: "ГОЛОСОВОЙ ВЫЗОВ",
+            secureChat: "Безопасный чат с шифрованием.",
+            enterId: "Введите ID для подключения.",
+            msgPlaceholder: "Введите сообщение...",
+            online: "В СЕТИ",
+            calling: "ЗВОНОК...",
+            closeCall: "СБРОСИТЬ",
+            typing: "пишет...",
+            callAlert: "Входящий звонок!"
+        },
+        de: {
+            myName: "MEIN NAME",
+            idPlaceholder: "ID zum Verbinden...",
+            connectBtn: "VERBINDEN",
+            voiceCall: "ANRUFEN",
+            secureChat: "Sicherer und verschlüsselter Chat.",
+            enterId: "Geben Sie eine ID ein.",
+            msgPlaceholder: "Nachricht schreiben...",
+            online: "ONLINE",
+            calling: "ANRUF...",
+            closeCall: "AUFLEGEN",
+            typing: "schreibt...",
+            callAlert: "Eingehender Anruf!"
+        }
+    };
+
+    let currentLang = 'tr';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        // Buton aktiflik durumunu güncelle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText.toLowerCase() === lang);
+        });
+
+        // Metinleri güncelle
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            el.innerText = i18n[lang][key];
+        });
+
+        // Placeholder'ları güncelle
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            el.placeholder = i18n[lang][key];
+        });
+    }
+
+    // --- MEVCUT SİSTEM ---
     window.addEventListener('load', () => setTimeout(() => document.body.classList.add('loaded'), 2500));
 
     const peer = new Peer();
@@ -189,7 +284,7 @@
             else if(data.type === 'msg') { 
                 playAudio('snd-msg'); 
                 addMessage(data.name, parseMarkdown(data.body), 'remote', data.time);
-                conn.send({type: 'seen', msgId: data.time}); // Görüldü onayı gönder
+                conn.send({type: 'seen', msgId: data.time}); 
             }
             else if(data.type === 'seen') { markAsSeen(data.msgId); }
             else if(data.type === 'typing') { showTyping(data.name, data.state); }
@@ -201,13 +296,12 @@
         });
     }
 
-    // --- MARKDOWN DİLLERİ ---
     function parseMarkdown(text) {
         return text
-            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')   // Kalın
-            .replace(/\*(.*?)\*/g, '<i>$1</i>')       // İtalik
-            .replace(/~~(.*?)~~/g, '<s>$1</s>')       // Üstü Çizili
-            .replace(/`(.*?)`/g, '<code>$1</code>');  // Kod
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\*(.*?)\*/g, '<i>$1</i>')
+            .replace(/~~(.*?)~~/g, '<s>$1</s>')
+            .replace(/`(.*?)`/g, '<code>$1</code>');
     }
 
     function updateMyProfile() {
@@ -218,7 +312,6 @@
     function sendMessage() {
         const input = document.getElementById('message-input');
         const myName = document.getElementById('my-name-input').value;
-        // Benzersiz ID için saniyeyi de ekledik
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         if(input.value.trim() === "") return;
         
@@ -230,8 +323,8 @@
 
     function addMessage(user, text, type, time) {
         const box = document.getElementById('chat-box');
-        const displayTime = time.substring(0, 5); // Ekranda saniyesiz göster
-        const id = time.replace(/:/g, ''); // HTML ID için temizle
+        const displayTime = time.substring(0, 5);
+        const id = time.replace(/:/g, '');
         
         box.innerHTML += `
             <div class="msg ${type}">
@@ -245,14 +338,10 @@
         box.scrollTop = box.scrollHeight;
     }
 
-    // --- GÖRÜLDÜ İŞLEME ---
     function markAsSeen(time) {
         const id = time.replace(/:/g, '');
         const el = document.getElementById(`seen-${id}`);
-        if(el) {
-            el.innerHTML = '✔✔';
-            el.classList.add('seen-icon');
-        }
+        if(el) { el.innerHTML = '✔✔'; el.classList.add('seen-icon'); }
     }
 
     function handleImage(input) {
@@ -284,7 +373,7 @@
 
     function showTyping(name, state) {
         const ui = document.getElementById('typing-ui');
-        ui.innerText = `${name} yazıyor...`;
+        ui.innerText = `${name} ${i18n[currentLang].typing}`;
         ui.style.display = state ? 'block' : 'none';
     }
 
@@ -310,15 +399,22 @@
 
     function playAudio(id) { const a = document.getElementById(id); a.currentTime = 0; a.play().catch(()=>{}); }
 
-    peer.on('call', call => { if(confirm("Arama geliyor!")) { navigator.mediaDevices.getUserMedia({audio:true}).then(s => { call.answer(s); startCallUI(call, s); }); } });
+    peer.on('call', call => { 
+        if(confirm(i18n[currentLang].callAlert)) { 
+            navigator.mediaDevices.getUserMedia({audio:true}).then(s => { call.answer(s); startCallUI(call, s); }); 
+        } 
+    });
+    
     function startCall() { 
         const pid = document.getElementById('peer-id-input').value;
         if(pid) navigator.mediaDevices.getUserMedia({audio:true}).then(s => startCallUI(peer.call(pid, s), s));
     }
+    
     function startCallUI(call, s) { 
         currentCall = call; playAudio('snd-call'); document.getElementById('call-overlay').style.display='flex';
         call.on('stream', rs => { document.getElementById('snd-call').pause(); document.getElementById('remote-audio').srcObject = rs; });
     }
+    
     function endCall() { if(currentCall) currentCall.close(); location.reload(); }
 </script>
 </body>
