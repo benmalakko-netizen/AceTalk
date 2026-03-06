@@ -53,20 +53,16 @@
         
         .local { background: var(--msg-local); align-self: flex-end; border: 1px solid #d1ecf1; border-right: 4px solid var(--skype-blue); }
         .remote { background: var(--msg-remote); align-self: flex-start; border: 1px solid #eee; border-left: 4px solid #bdc3c7; }
-        .msg-meta { font-size: 9px; margin-top: 5px; color: #999; display: flex; justify-content: flex-end; }
+        .msg-meta { font-size: 9px; margin-top: 5px; color: #999; display: flex; justify-content: flex-end; align-items: center; gap: 3px; }
+        .seen-icon { color: var(--skype-blue); font-weight: bold; }
 
         /* --- GİRİŞ ALANI --- */
         .input-area { padding: 20px 30px; display: flex; gap: 15px; border-top: 1px solid #eee; background: #fff; align-items: center; }
         #message-input { flex: 1; padding: 14px; border: 1px solid #ddd; outline: none; font-size: 14px; background: #fdfdfd; border-radius: 4px !important; }
         
-        /* Butonlar için genel stil */
-        .icon-btn { cursor: pointer; display: flex; align-items: center; transition: 0.2s; user-select: none; color: var(--skype-blue); /* İkon rengi mavi */ }
-        .icon-btn:hover { color: var(--skype-blue); /* Hover'da da mavi */ }
-        
-        /* Animasyonu kaldır */
+        .icon-btn { cursor: pointer; display: flex; align-items: center; transition: 0.2s; user-select: none; color: var(--skype-blue); }
         .icon-btn:hover { transform: none !important; }
 
-        /* Dağ İkonu CSS */
         .mountain-icon { width: 24px; height: 24px; position: relative; overflow: hidden; border: 2px solid currentColor; border-radius: 4px !important; }
         .mountain-icon::before { content: ''; position: absolute; bottom: -2px; left: 1px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid currentColor; }
         .mountain-icon::after { content: ''; position: absolute; bottom: -2px; left: 8px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid currentColor; }
@@ -190,7 +186,12 @@
         });
         conn.on('data', data => {
             if(data.type === 'profile') { peerNames[conn.peer] = data.name; updateUI(); }
-            else if(data.type === 'msg') { playAudio('snd-msg'); addMessage(data.name, data.body, 'remote', data.time); }
+            else if(data.type === 'msg') { 
+                playAudio('snd-msg'); 
+                addMessage(data.name, parseMarkdown(data.body), 'remote', data.time);
+                conn.send({type: 'seen', msgId: data.time}); // Görüldü onayı gönder
+            }
+            else if(data.type === 'seen') { markAsSeen(data.msgId); }
             else if(data.type === 'typing') { showTyping(data.name, data.state); }
         });
         conn.on('close', () => {
@@ -198,6 +199,15 @@
             delete peerNames[conn.peer];
             updateUI();
         });
+    }
+
+    // --- MARKDOWN DİLLERİ ---
+    function parseMarkdown(text) {
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')   // Kalın
+            .replace(/\*(.*?)\*/g, '<i>$1</i>')       // İtalik
+            .replace(/~~(.*?)~~/g, '<s>$1</s>')       // Üstü Çizili
+            .replace(/`(.*?)`/g, '<code>$1</code>');  // Kod
     }
 
     function updateMyProfile() {
@@ -208,23 +218,41 @@
     function sendMessage() {
         const input = document.getElementById('message-input');
         const myName = document.getElementById('my-name-input').value;
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        // Benzersiz ID için saniyeyi de ekledik
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         if(input.value.trim() === "") return;
+        
         connections.forEach(c => c.send({type: 'msg', name: myName, body: input.value, time: time}));
-        addMessage("", input.value, 'local', time);
+        addMessage("", parseMarkdown(input.value), 'local', time);
         input.value = "";
         notifyTyping(false);
     }
 
     function addMessage(user, text, type, time) {
         const box = document.getElementById('chat-box');
+        const displayTime = time.substring(0, 5); // Ekranda saniyesiz göster
+        const id = time.replace(/:/g, ''); // HTML ID için temizle
+        
         box.innerHTML += `
             <div class="msg ${type}">
                 ${user ? `<strong>${user}</strong><br>` : ''}
                 ${text}
-                <div class="msg-meta">${time}</div>
+                <div class="msg-meta">
+                    ${displayTime} 
+                    ${type === 'local' ? `<span id="seen-${id}" style="margin-left:4px;">✔</span>` : ''}
+                </div>
             </div>`;
         box.scrollTop = box.scrollHeight;
+    }
+
+    // --- GÖRÜLDÜ İŞLEME ---
+    function markAsSeen(time) {
+        const id = time.replace(/:/g, '');
+        const el = document.getElementById(`seen-${id}`);
+        if(el) {
+            el.innerHTML = '✔✔';
+            el.classList.add('seen-icon');
+        }
     }
 
     function handleImage(input) {
@@ -240,7 +268,7 @@
 
     function sendSpecialMessage(content) {
         const myName = document.getElementById('my-name-input').value;
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         connections.forEach(c => c.send({type: 'msg', name: myName, body: content, time: time}));
         addMessage("", content, 'local', time);
     }
