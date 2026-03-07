@@ -14,9 +14,41 @@
             --call-red: #e74c3c;
             --msg-local: #f0faff;
             --msg-remote: #f9f9f9;
+            --msg-local-border: #d1ecf1;
+            --msg-remote-border: #eee;
+            --chat-text: #333;
+            --input-area-bg: #fff;
+            --input-border: #ddd;
+            --input-bg: #fdfdfd;
+            --input-color: #333;
         }
 
-        * { box-sizing: border-box; border-radius: 0 !important; transition: all 0.2s ease; }
+        body.dark-chat {
+            --chat-bg: #1a1a2e;
+            --msg-local: #0f3460;
+            --msg-remote: #16213e;
+            --msg-local-border: #00aff0;
+            --msg-remote-border: #2a2a4a;
+            --chat-text: #e0e0e0;
+            --input-area-bg: #16213e;
+            --input-border: #2a2a4a;
+            --input-bg: #0f3460;
+            --input-color: #e0e0e0;
+        }
+
+        /* THEME TOGGLE */
+        .theme-toggle {
+            background: #1a252f; border: none; color: #7f8c8d;
+            font-size: 11px; padding: 12px 12px; cursor: pointer;
+            font-weight: bold; text-align: left; letter-spacing: 1px;
+            width: 100%; font-family: 'Ubuntu', sans-serif;
+            transition: all 0.2s ease;
+        }
+        .theme-toggle:hover { color: white; }
+        .theme-toggle.active { color: white; border-left: 3px solid var(--skype-blue); padding-left: 9px; }
+
+        * { box-sizing: border-box; border-radius: 0 !important; }
+        button, .icon-btn, .theme-toggle { transition: color 0.2s ease, background 0.2s ease; }
         body, html { height: 100%; margin: 0; font-family: 'Ubuntu', sans-serif; font-weight: 300; overflow: hidden; background-color: var(--sidebar-bg); }
 
         /* --- SPLASH SCREEN --- */
@@ -45,8 +77,8 @@
         .status-input { width: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 14px; outline: none; border-bottom: 1px solid #34495e; padding-bottom: 5px; }
 
         /* DİL SEÇİCİ STİLİ */
-        .lang-switcher { display: flex; gap: 5px; margin-bottom: 20px; }
-        .lang-btn { flex: 1; background: #1a252f; border: none; color: #7f8c8d; font-size: 10px; padding: 5px; cursor: pointer; font-weight: bold; }
+        .lang-switcher { display: flex; flex-direction: row; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
+        .lang-btn { background: #1a252f; border: none; color: #7f8c8d; font-size: 11px; padding: 8px 10px; cursor: pointer; font-weight: bold; letter-spacing: 1px; flex: 1; text-align: center; transition: none; }
         .lang-btn.active { color: white; border-bottom: 2px solid var(--skype-blue); }
 
         /* --- SOHBET ALANI --- */
@@ -56,14 +88,14 @@
         .msg { max-width: 70%; padding: 12px 18px; line-height: 1.6; position: relative; font-size: 14px; animation: msgIn 0.3s ease-out; }
         @keyframes msgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .local { background: var(--msg-local); align-self: flex-end; border: 1px solid #d1ecf1; border-right: 4px solid var(--skype-blue); }
-        .remote { background: var(--msg-remote); align-self: flex-start; border: 1px solid #eee; border-left: 4px solid #bdc3c7; }
+        .local { background: var(--msg-local); align-self: flex-end; border: 1px solid var(--msg-local-border); border-right: 4px solid var(--skype-blue); color: var(--chat-text); }
+        .remote { background: var(--msg-remote); align-self: flex-start; border: 1px solid var(--msg-remote-border); border-left: 4px solid #bdc3c7; color: var(--chat-text); }
         .msg-meta { font-size: 9px; margin-top: 5px; color: #999; display: flex; justify-content: flex-end; align-items: center; gap: 3px; }
         .seen-icon { color: var(--skype-blue); font-weight: bold; }
 
         /* --- GİRİŞ ALANI --- */
-        .input-area { padding: 20px 30px; display: flex; gap: 15px; border-top: 1px solid #eee; background: #fff; align-items: center; }
-        #message-input { flex: 1; padding: 14px; border: 1px solid #ddd; outline: none; font-size: 14px; background: #fdfdfd; border-radius: 4px !important; }
+        .input-area { padding: 20px 30px; display: flex; gap: 15px; border-top: 1px solid var(--input-border); background: var(--input-area-bg); align-items: center; }
+        #message-input { flex: 1; padding: 14px; border: 1px solid var(--input-border); outline: none; font-size: 14px; background: var(--input-bg); color: var(--input-color); border-radius: 4px !important; }
         
         .icon-btn { cursor: pointer; display: flex; align-items: center; transition: 0.2s; user-select: none; color: var(--skype-blue); }
         .icon-btn:hover { transform: none !important; }
@@ -87,7 +119,14 @@
             display: none; flex-direction: column; align-items: center; justify-content: center; color: white;
         }
 
-        .typing-pulse { font-size: 11px; color: var(--skype-blue); margin-bottom: 10px; margin-left: 30px; display: none; }
+        body.dark-chat .right-bar {
+            background: var(--sidebar-bg);
+            border-left: 1px solid #1a252f;
+            color: #e0e0e0;
+        }
+        body.dark-chat .right-bar .online-title { color: #7f8c8d; }
+        body.dark-chat .user-card { border-bottom: 1px solid #1a252f; }
+        body.dark-chat .user-name { color: #e0e0e0; }
     </style>
 </head>
 <body>
@@ -110,9 +149,11 @@
 
 <div class="app-container">
     <div class="sidebar">
-        <div class="brand-section">
-            <h1 class="brand-name">AceTalk</h1>
-            <div class="sidebar-slogan">Simple Messenger</div>
+        <div class="brand-section" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 30px;">
+            <div>
+                <h1 class="brand-name">AceTalk</h1>
+                <div class="sidebar-slogan">Simple Messenger</div>
+            </div>
         </div>
 
         <div class="lang-switcher">
@@ -120,6 +161,7 @@
             <button class="lang-btn" onclick="setLanguage('en')">EN</button>
             <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
             <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Koyu Mod</button>
         </div>
 
         <div class="my-status-box">
@@ -143,7 +185,7 @@
             </div>
         </div>
         
-        <div class="typing-pulse" id="typing-ui">birileri yazıyor...</div>
+        <div class="typing-pulse" id="typing-ui" style="display:none; color: #00aff0; font-weight: bold; font-size: 11px; padding: 4px 30px;">birileri yazıyor...</div>
 
         <div class="input-area">
             <label for="img-input" class="icon-btn" title="Resim Gönder">
@@ -231,12 +273,26 @@
     };
 
     let currentLang = 'tr';
+    let isLightMode = false;
+
+    function toggleTheme() {
+        isLightMode = !isLightMode;
+        document.body.classList.toggle('dark-chat', isLightMode);
+        const btn = document.getElementById('theme-btn');
+        if (isLightMode) {
+            btn.innerText = '☀️ Açık Mod';
+            btn.classList.add('active');
+        } else {
+            btn.innerText = '🌙 Koyu Mod';
+            btn.classList.remove('active');
+        }
+    }
 
     function setLanguage(lang) {
         currentLang = lang;
-        // Buton aktiflik durumunu güncelle
         document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.innerText.toLowerCase() === lang);
+            const btnLang = btn.getAttribute('onclick').match(/'(\w+)'/)[1];
+            btn.classList.toggle('active', btnLang === lang);
         });
 
         // Metinleri güncelle
@@ -373,8 +429,12 @@
 
     function showTyping(name, state) {
         const ui = document.getElementById('typing-ui');
-        ui.innerText = `${name} ${i18n[currentLang].typing}`;
-        ui.style.display = state ? 'block' : 'none';
+        if(state) {
+            ui.innerText = `${name} ${i18n[currentLang].typing}`;
+            ui.style.display = 'block';
+        } else {
+            ui.style.display = 'none';
+        }
     }
 
     function updateUI() {
