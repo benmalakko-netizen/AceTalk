@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>AceTalk | Simple Messenger</title>
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
@@ -51,14 +53,10 @@
         * { box-sizing: border-box; border-radius: 0 !important; }
         button, .icon-btn, .theme-toggle { transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease; }
 
-        /* --- BUTON ANİMASYONLARI --- */
-
-        /* Genel buton: hafif basma efekti */
         button:not(:disabled):active {
             transform: scale(0.95) translateY(1px);
         }
 
-        /* Bağlan butonu */
         button[onclick="connectToPeer()"] {
             position: relative; overflow: hidden;
         }
@@ -71,7 +69,6 @@
             box-shadow: none;
         }
 
-        /* Sesli ara butonu */
         button[onclick="startCall()"] {
             position: relative; overflow: hidden;
         }
@@ -83,7 +80,6 @@
             transform: scale(0.95);
         }
 
-        /* Sesli ara + Bağlan: pulse animasyonu hover'da */
         @keyframes callPulse {
             0%   { box-shadow: 0 0 0 0 rgba(46,204,113,0.5); }
             70%  { box-shadow: 0 0 0 8px rgba(46,204,113,0); }
@@ -101,7 +97,6 @@
             animation: connectPulse 1.2s infinite;
         }
 
-        /* Gönder oku */
         .icon-btn[onclick="sendMessage()"] {
             transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important;
         }
@@ -112,7 +107,6 @@
             transform: translateX(8px) scale(0.95);
         }
 
-        /* Resim gönder butonu */
         label.icon-btn {
             transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important;
         }
@@ -123,7 +117,6 @@
             transform: scale(0.9);
         }
 
-        /* Dil butonları */
         .lang-btn {
             transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
         }
@@ -133,11 +126,9 @@
         }
         .lang-btn:active { transform: translateY(0); }
 
-        /* Tema toggle */
         .theme-toggle:hover { transform: translateX(3px); }
         .theme-toggle:active { transform: translateX(0); }
 
-        /* SOS butonu: titreme animasyonu hover'da */
         @keyframes sosShake {
             0%,100% { transform: translateX(0); }
             20%      { transform: translateX(-3px) rotate(-1deg); }
@@ -154,7 +145,6 @@
             box-shadow: none;
         }
 
-        /* Kapat butonu (overlay) */
         #call-overlay button:hover {
             transform: scale(1.05);
             filter: brightness(1.15);
@@ -164,7 +154,6 @@
         }
         body, html { height: 100%; margin: 0; font-family: 'Ubuntu', sans-serif; font-weight: 300; overflow: hidden; background-color: var(--sidebar-bg); }
 
-        /* --- SPLASH SCREEN --- */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--sidebar-bg); display: flex; flex-direction: column;
@@ -176,11 +165,9 @@
         .splash-loader::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--skype-blue); animation: loading 1.5s infinite; }
         @keyframes loading { 100% { left: 100%; } }
 
-        /* --- ANA KONTEYNER --- */
         .app-container { display: flex; height: 100vh; width: 100vw; opacity: 0; }
         .loaded .app-container { opacity: 1; }
 
-        /* --- SOL PANEL --- */
         .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 25px; border-right: 1px solid #1a252f; z-index: 10; }
         .brand-section { margin-bottom: 30px; }
         .brand-name { color: var(--skype-blue); font-size: 32px; font-weight: 700; margin: 0; }
@@ -193,7 +180,6 @@
         .lang-btn { background: #1a252f; border: none; color: #7f8c8d; font-size: 11px; padding: 8px 10px; cursor: pointer; font-weight: bold; letter-spacing: 1px; flex: 1; text-align: center; transition: none; }
         .lang-btn.active { color: white; border-bottom: 2px solid var(--skype-blue); }
 
-        /* --- SOHBET ALANI --- */
         .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); position: relative; }
         #chat-box { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
         
@@ -205,7 +191,6 @@
         .msg-meta { font-size: 9px; margin-top: 5px; color: #999; display: flex; justify-content: flex-end; align-items: center; gap: 3px; }
         .seen-icon { color: var(--skype-blue); font-weight: bold; }
 
-        /* --- SOS MESAJI --- */
         .msg-sos {
             max-width: 90%;
             align-self: center;
@@ -241,7 +226,6 @@
             margin-top: 3px;
         }
 
-        /* --- SOS BUTONU --- */
         .sos-btn {
             background: var(--sos-red);
             color: white;
@@ -275,7 +259,6 @@
         }
         .sos-btn:not(:disabled):hover::after { left: 100%; }
 
-        /* --- GİRİŞ ALANI --- */
         .input-area { padding: 20px 30px; display: flex; gap: 15px; border-top: 1px solid var(--input-border); background: var(--input-area-bg); align-items: center; }
         #message-input { flex: 1; padding: 14px; border: 1px solid var(--input-border); outline: none; font-size: 14px; background: var(--input-bg); color: var(--input-color); border-radius: 4px !important; }
         
@@ -287,14 +270,12 @@
         .mountain-icon::after { content: ''; position: absolute; bottom: -2px; left: 8px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid currentColor; }
         .sun { position: absolute; top: 3px; right: 3px; width: 5px; height: 5px; background: currentColor; border-radius: 50% !important; }
 
-        /* --- SAĞ PANEL --- */
         .right-bar { width: 240px; background: #fcfcfc; border-left: 1px solid #eee; padding: 25px 20px; }
         .online-title { font-size: 12px; font-weight: 700; color: #95a5a6; letter-spacing: 1px; margin-bottom: 20px; display: flex; justify-content: space-between; }
         .online-count { background: var(--skype-blue); color: white; padding: 2px 8px; font-size: 10px; }
         .user-card { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
         .user-avatar { width: 35px; height: 35px; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 12px; }
 
-        /* --- CALL OVERLAY --- */
         #call-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(44, 62, 80, 0.95); z-index: 10000;
@@ -310,7 +291,6 @@
         body.dark-chat .user-card { border-bottom: 1px solid #1a252f; }
         body.dark-chat .user-name { color: #e0e0e0; }
 
-        /* --- SOS COOLDOWN TIMER --- */
         #sos-timer {
             font-size: 9px;
             color: #e74c3c;
@@ -360,7 +340,7 @@
         <div class="my-status-box">
             <b style="font-size: 10px; color: var(--skype-blue);" data-i18n="myName">ADIM</b>
             <input type="text" id="my-name-input" class="status-input" value="AceUser" onchange="updateMyProfile()">
-            <small style="display:block; margin-top:15px; font-size: 9px; color: #7f8c8d;">ID: <span id="my-id" style="color: #00ffcc;">...</span></small>
+            <small style="display:block; margin-top:15px; font-size: 9px; color: #7f8c8d;">ID: <span id="my-id" style="color: #00ffcc; cursor:pointer;" onclick="navigator.clipboard.writeText(this.innerText).then(()=>{this.style.color='#fff';setTimeout(()=>this.style.color='#00ffcc',1000)})" title="Kopyalamak için tıkla">...</span></small>
         </div>
 
         <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
@@ -368,7 +348,6 @@
             <button onclick="connectToPeer()" data-i18n="connectBtn" style="background: var(--skype-blue); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">BAĞLAN</button>
             <button onclick="startCall()" data-i18n="voiceCall" style="background: var(--call-green); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">SESLİ ARA</button>
             
-            <!-- SOS BUTONU -->
             <div style="display:flex; align-items:center; gap:8px;">
                 <button class="sos-btn" id="sos-btn" onclick="sendSOS()">🚨 ACİL</button>
                 <div id="sos-timer" style="font-size:9px; color:#e74c3c; letter-spacing:1px;"></div>
@@ -411,7 +390,6 @@
 <audio id="remote-audio" autoplay></audio>
 
 <script>
-    // --- ÇOKLU DİL SİSTEMİ ---
     const i18n = {
         tr: {
             myName: "ADIM",
@@ -527,7 +505,6 @@
         });
     }
 
-    // --- MEVCUT SİSTEM ---
     window.addEventListener('load', () => setTimeout(() => document.body.classList.add('loaded'), 2500));
 
     const peer = new Peer();
@@ -572,14 +549,9 @@
         });
     }
 
-    // =============================================
-    // --- SOS / ACİL YARDIM SİSTEMİ ---
-    // =============================================
-
-    // Görülmüş SOS ID'lerini tutar — tekrar işlemeyi önler
     const seenSOS = new Set();
     let sosCooldownTimer = null;
-    const SOS_COOLDOWN = 60; // saniye
+    const SOS_COOLDOWN = 60;
 
     function sendSOS() {
         if(connections.length === 0) {
@@ -593,37 +565,28 @@
 
         const sosPacket = {
             type:      'sos',
-            id:        sosId,       // benzersiz SOS kimliği (spam koruması)
+            id:        sosId,
             fromId:    myId,
             fromName:  myName,
-            ttl:       5,           // max 5 hop yayılır
+            ttl:       5,
             hopCount:  0,
             timestamp: Date.now()
         };
 
-        // Kendi chat'inde göster
         seenSOS.add(sosId);
         addSOSMessage(myName, 0, true);
-
-        // Tüm bağlı peer'lara gönder
         connections.forEach(c => c.send(sosPacket));
-
-        // Butonu devre dışı bırak ve geri sayım başlat
         startSOSCooldown();
     }
 
     function handleSOS(data) {
-        // Zaten görüldüyse veya TTL bittiyse yoksay
         if(seenSOS.has(data.id)) return;
         if(data.ttl <= 0) return;
 
         seenSOS.add(data.id);
-
-        // Chat'te göster + ses çal
         playAudio('snd-sos');
         addSOSMessage(data.fromName, data.hopCount + 1, false);
 
-        // Kalan TTL ile diğer peer'lara ilet (gossip protocol)
         const forwardPacket = {
             ...data,
             ttl:      data.ttl - 1,
@@ -651,7 +614,6 @@
             </div>`;
         box.scrollTop = box.scrollHeight;
 
-        // Sayfanın title'ını da değiştir (sekme bildirimi)
         document.title = `🚨 SOS – ${fromName} | AceTalk`;
         setTimeout(() => document.title = 'AceTalk | Simple Messenger', 8000);
     }
@@ -676,10 +638,6 @@
             }
         }, 1000);
     }
-
-    // =============================================
-    // --- MEVCUT FONKSİYONLAR (değişmedi) ---
-    // =============================================
 
     function parseMarkdown(text) {
         return text
