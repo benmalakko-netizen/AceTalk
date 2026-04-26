@@ -28,6 +28,17 @@
             --sos-dark: #c0392b;
         }
 
+        /* YENİ: Duvar Kağıdı Glassmorphism Efekti */
+        .wallpaper-active .sidebar,
+        .wallpaper-active .main-chat,
+        .wallpaper-active .right-bar,
+        .wallpaper-active .input-area,
+        .wallpaper-active .my-status-box {
+            background: rgba(0,0,0,0.3) !important;
+            backdrop-filter: blur(15px);
+            border-color: rgba(255,255,255,0.1) !important;
+        }
+
         body.dark-chat {
             --chat-bg: #1a1a2e;
             --msg-local: #0f3460;
@@ -287,6 +298,8 @@
             <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
             <button class="lang-btn" onclick="setLanguage('de')">DE</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Koyu Mod</button>
+            <button class="theme-toggle" onclick="document.getElementById('wallpaper-input').click()" style="margin-top:5px;">🖼️ Duvar Kağıdı</button>
+            <input type="file" id="wallpaper-input" accept="image/*" style="display:none" onchange="setWallpaper(this)">
         </div>
 
         <div class="my-status-box">
@@ -342,86 +355,54 @@
 <audio id="remote-audio" autoplay></audio>
 
 <script>
+    // Duvar kağıdı fonksiyonu
+    function setWallpaper(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                document.body.style.backgroundImage = `url('${e.target.result}')`;
+                document.body.style.backgroundSize = "cover";
+                document.body.style.backgroundPosition = "center";
+                document.body.style.backgroundAttachment = "fixed";
+                document.body.classList.add('wallpaper-active');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // [Senin mevcut JavaScript kodlarının devamı...]
     const i18n = {
         tr: {
-            myName: "ADIM",
-            idPlaceholder: "Bağlanılacak ID...",
-            connectBtn: "BAĞLAN",
-            voiceCall: "SESLİ ARA",
-            secureChat: "Güvenli ve şifreli uçtan uca sohbet.",
-            enterId: "Bağlanmak için bir ID girin.",
-            msgPlaceholder: "Mesajınızı yazın...",
-            online: "ÇEVRİMİÇİ",
-            calling: "ARANIYOR...",
-            closeCall: "KAPAT",
-            typing: "yazıyor...",
-            callAlert: "Arama geliyor!",
-            sosBtn: "🚨 ACİL YARDIM",
-            sosCooldown: "saniye bekle",
-            sosReceived: "ACİL YARDIM ÇAĞRISI",
-            sosFrom: "Gönderen",
-            sosHops: "ağ üzerinden ulaştı",
-            sosNoConn: "Bağlı kimse yok! Önce birine bağlan."
+            myName: "ADIM", idPlaceholder: "Bağlanılacak ID...", connectBtn: "BAĞLAN", voiceCall: "SESLİ ARA",
+            secureChat: "Güvenli ve şifreli uçtan uca sohbet.", enterId: "Bağlanmak için bir ID girin.",
+            msgPlaceholder: "Mesajınızı yazın...", online: "ÇEVRİMİÇİ", calling: "ARANIYOR...",
+            closeCall: "KAPAT", typing: "yazıyor...", callAlert: "Arama geliyor!",
+            sosBtn: "🚨 ACİL YARDIM", sosCooldown: "saniye bekle", sosReceived: "ACİL YARDIM ÇAĞRISI",
+            sosFrom: "Gönderen", sosHops: "ağ üzerinden ulaştı", sosNoConn: "Bağlı kimse yok! Önce birine bağlan."
         },
         en: {
-            myName: "MY NAME",
-            idPlaceholder: "ID to connect...",
-            connectBtn: "CONNECT",
-            voiceCall: "VOICE CALL",
-            secureChat: "Secure and end-to-end encrypted chat.",
-            enterId: "Enter an ID to connect.",
-            msgPlaceholder: "Type your message...",
-            online: "ONLINE",
-            calling: "CALLING...",
-            closeCall: "HANG UP",
-            typing: "is typing...",
-            callAlert: "Incoming call!",
-            sosBtn: "🚨 EMERGENCY SOS",
-            sosCooldown: "seconds wait",
-            sosReceived: "EMERGENCY SOS RECEIVED",
-            sosFrom: "From",
-            sosHops: "hops away",
-            sosNoConn: "Nobody connected! Connect to someone first."
+            myName: "MY NAME", idPlaceholder: "ID to connect...", connectBtn: "CONNECT", voiceCall: "VOICE CALL",
+            secureChat: "Secure and end-to-end encrypted chat.", enterId: "Enter an ID to connect.",
+            msgPlaceholder: "Type your message...", online: "ONLINE", calling: "CALLING...",
+            closeCall: "HANG UP", typing: "is typing...", callAlert: "Incoming call!",
+            sosBtn: "🚨 EMERGENCY SOS", sosCooldown: "seconds wait", sosReceived: "EMERGENCY SOS RECEIVED",
+            sosFrom: "From", sosHops: "hops away", sosNoConn: "Nobody connected! Connect to someone first."
         },
         ru: {
-            myName: "МОЕ ИМЯ",
-            idPlaceholder: "ID для связи...",
-            connectBtn: "ПОДКЛЮЧИТЬ",
-            voiceCall: "ГОЛОСОВОЙ ВЫЗОВ",
-            secureChat: "Безопасный чат с шифрованием.",
-            enterId: "Введите ID для подключения.",
-            msgPlaceholder: "Введите сообщение...",
-            online: "В СЕТИ",
-            calling: "ЗВОНОК...",
-            closeCall: "СБРОСИТЬ",
-            typing: "пишет...",
-            callAlert: "Входящий звонок!",
-            sosBtn: "🚨 ЭКСТРЕННЫЙ SOS",
-            sosCooldown: "сек ожидание",
-            sosReceived: "ПОЛУЧЕН СИГНАЛ SOS",
-            sosFrom: "От",
-            sosHops: "прыжков",
-            sosNoConn: "Нет подключений! Сначала подключитесь."
+            myName: "МОЕ ИМЯ", idPlaceholder: "ID для связи...", connectBtn: "ПОДКЛЮЧИТЬ", voiceCall: "ГОЛОСОВОЙ ВЫЗОВ",
+            secureChat: "Безопасный чат с шифрованием.", enterId: "Введите ID для подключения.",
+            msgPlaceholder: "Введите сообщение...", online: "В СЕТИ", calling: "ЗВОНОК...",
+            closeCall: "СБРОСИТЬ", typing: "пишет...", callAlert: "Входящий звонок!",
+            sosBtn: "🚨 ЭКСТРЕННЫЙ SOS", sosCooldown: "сек ожидание", sosReceived: "ПОЛУЧЕН СИГНАЛ SOS",
+            sosFrom: "От", sosHops: "прыжков", sosNoConn: "Нет подключений! Сначала подключитесь."
         },
         de: {
-            myName: "MEIN NAME",
-            idPlaceholder: "ID zum Verbinden...",
-            connectBtn: "VERBINDEN",
-            voiceCall: "ANRUFEN",
-            secureChat: "Sicherer und verschlüsselter Chat.",
-            enterId: "Geben Sie eine ID ein.",
-            msgPlaceholder: "Nachricht schreiben...",
-            online: "ONLINE",
-            calling: "ANRUF...",
-            closeCall: "AUFLEGEN",
-            typing: "schreibt...",
-            callAlert: "Eingehender Anruf!",
-            sosBtn: "🚨 NOTFALL SOS",
-            sosCooldown: "Sek warten",
-            sosReceived: "NOTFALL SOS EMPFANGEN",
-            sosFrom: "Von",
-            sosHops: "Hops entfernt",
-            sosNoConn: "Niemand verbunden! Zuerst verbinden."
+            myName: "MEIN NAME", idPlaceholder: "ID zum Verbinden...", connectBtn: "VERBINDEN", voiceCall: "ANRUFEN",
+            secureChat: "Sicherer und verschlüsselter Chat.", enterId: "Geben Sie eine ID ein.",
+            msgPlaceholder: "Nachricht schreiben...", online: "ONLINE", calling: "ANRUF...",
+            closeCall: "AUFLEGEN", typing: "schreibt...", callAlert: "Eingehender Anruf!",
+            sosBtn: "🚨 NOTFALL SOS", sosCooldown: "Sek warten", sosReceived: "NOTFALL SOS EMPFANGEN",
+            sosFrom: "Von", sosHops: "Hops entfernt", sosNoConn: "Niemand verbunden! Zuerst verbinden."
         }
     };
 
@@ -444,8 +425,11 @@
     function setLanguage(lang) {
         currentLang = lang;
         document.querySelectorAll('.lang-btn').forEach(btn => {
-            const btnLang = btn.getAttribute('onclick').match(/'(\w+)'/)[1];
-            btn.classList.toggle('active', btnLang === lang);
+            const onclickAttr = btn.getAttribute('onclick');
+            if(onclickAttr) {
+                const match = onclickAttr.match(/'(\w+)'/);
+                if(match) btn.classList.toggle('active', match[1] === lang);
+            }
         });
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
@@ -512,7 +496,7 @@
         }
 
         const myName = document.getElementById('my-name-input').value;
-        const myId   = document.getElementById('my-id').innerText;
+        const myId  = document.getElementById('my-id').innerText;
         const sosId  = myId + '_' + Date.now();
 
         const sosPacket = {
@@ -703,8 +687,10 @@
                 </div>`;
         });
     }
-
+    
     function playAudio(id) { document.getElementById(id).play().catch(()=>{}); }
+    function endCall() { if(currentCall) { currentCall.close(); currentCall = null; document.getElementById('call-overlay').style.display = 'none'; } }
+    function startCall() { alert("Sesli arama özelliği üzerinde çalışılıyor."); }
 </script>
 </body>
 </html>
