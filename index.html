@@ -38,12 +38,8 @@
         * { box-sizing: border-box; border-radius: 0 !important; }
         button, .icon-btn,
         button:not(:disabled):active { transform: scale(0.95) translateY(1px); }
-        button[onclick="connectToPeer()"] { position: relative; overflow: hidden; }
-        button[onclick="connectToPeer()"]:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,175,240,0.4); }
-        button[onclick="connectToPeer()"]:not(:disabled):active { transform: translateY(0px); box-shadow: none; }
-        button[onclick="startCall()"] { position: relative; overflow: hidden; }
-        button[onclick="startCall()"]:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(46,204,113,0.4); }
-        button[onclick="startCall()"]:not(:disabled):active { transform: scale(0.95); }
+
+
         @keyframes callPulse {
             0%   { box-shadow: 0 0 0 0 rgba(46,204,113,0.5); }
             70%  { box-shadow: 0 0 0 8px rgba(46,204,113,0); }
@@ -54,8 +50,7 @@
             70%  { box-shadow: 0 0 0 8px rgba(0,175,240,0); }
             100% { box-shadow: 0 0 0 0 rgba(0,175,240,0); }
         }
-        button[onclick="startCall()"]:not(:disabled):hover { animation: callPulse 1.2s infinite; }
-        button[onclick="connectToPeer()"]:not(:disabled):hover { animation: connectPulse 1.2s infinite; }
+
         .icon-btn[onclick="sendMessage()"] { transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important; }
         .icon-btn[onclick="sendMessage()"]:hover { transform: translateX(4px) scale(1.15); }
         .icon-btn[onclick="sendMessage()"]:active { transform: translateX(8px) scale(0.95); }
@@ -73,8 +68,7 @@
             60%     { transform: translateX(-2px); }
             80%     { transform: translateX(2px); }
         }
-        .sos-btn:not(:disabled):hover { animation: sosShake 0.4s ease; box-shadow: 0 0 12px rgba(231,76,60,0.6); }
-        .sos-btn:not(:disabled):active { transform: scale(0.93); box-shadow: none; }
+
         #call-overlay button:hover { transform: scale(1.05); filter: brightness(1.15); }
         #call-overlay button:active { transform: scale(0.96); }
         body, html { height: 100%; margin: 0; font-family: 'Ubuntu', sans-serif; font-weight: 300; overflow: hidden; background-color: var(--sidebar-bg); }
@@ -161,12 +155,26 @@
             transition: color 0.2s ease, border-color 0.2s ease, padding-left 0.2s ease, background 0.2s ease;
         }
         .wp-btn:hover {
-            color: white;
-            border-left-color: var(--skype-blue);
-            padding-left: 20px;
-            background: rgba(0,175,240,0.07);
+            color: white; border-left-color: var(--skype-blue);
+            padding-left: 20px; background: rgba(0,175,240,0.07);
         }
         .wp-btn:active { padding-left: 13px; }
+
+        /* Sidebar ana butonlar - slide animasyonu */
+        .sidebar-action-btn {
+            border: none; color: white; padding: 13px 15px; font-weight: bold;
+            cursor: pointer; font-family: 'Ubuntu', sans-serif; font-size: 13px;
+            letter-spacing: 1px; width: 100%; text-align: left;
+            border-left: 3px solid transparent;
+            transition: padding-left 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+        }
+        .sidebar-action-btn:hover { padding-left: 22px; border-left-color: rgba(255,255,255,0.6); filter: brightness(1.15); }
+        .sidebar-action-btn:active { padding-left: 12px; filter: brightness(0.9); }
+        .sidebar-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-connect { background: var(--skype-blue); }
+        .btn-call    { background: var(--call-green); }
+        .btn-sos     { background: var(--sos-red); font-size: 12px; }
+        .btn-sos:disabled { background: #555; color: #999; }
     </style>
 </head>
 <body>
@@ -217,12 +225,11 @@
 
         <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
             <input type="text" id="peer-id-input" data-i18n-placeholder="idPlaceholder" placeholder="Bağlanılacak ID..." style="background: #1a252f; border: 1px solid #34495e; padding: 10px; color: white; outline: none;">
-            <button onclick="connectToPeer()" data-i18n="connectBtn" style="background: var(--skype-blue); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">BAĞLAN</button>
-            <button onclick="startCall()" data-i18n="voiceCall" style="background: var(--call-green); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">SESLİ ARA</button>
-            
-            <div style="display:flex; align-items:center; gap:8px;">
-                <button class="sos-btn" id="sos-btn" onclick="sendSOS()">🚨 ACİL</button>
-                <div id="sos-timer" style="font-size:9px; color:#e74c3c; letter-spacing:1px;"></div>
+            <button onclick="connectToPeer()" data-i18n="connectBtn" class="sidebar-action-btn btn-connect">BAĞLAN</button>
+            <button onclick="startCall()" data-i18n="voiceCall" class="sidebar-action-btn btn-call">SESLİ ARA</button>
+            <div>
+                <button class="sidebar-action-btn btn-sos" id="sos-btn" onclick="sendSOS()">🚨 ACİL</button>
+                <div id="sos-timer"></div>
             </div>
         </div>
     </div>
