@@ -5,7 +5,6 @@
     <title>AceTalk | Simple Messenger</title>
     <link rel="icon" type="image/png" href="icon-192-new.png?v=3">
     <link rel="apple-touch-icon" href="icon-192-new.png?v=3">
-    
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
@@ -27,8 +26,6 @@
             --sos-red: #e74c3c;
             --sos-dark: #c0392b;
         }
-
-        /* YENİ: Duvar Kağıdı Glassmorphism Efekti */
         .wallpaper-active .sidebar,
         .wallpaper-active .main-chat,
         .wallpaper-active .right-bar,
@@ -38,7 +35,6 @@
             backdrop-filter: blur(15px);
             border-color: rgba(255,255,255,0.1) !important;
         }
-
         body.dark-chat {
             --chat-bg: #1a1a2e;
             --msg-local: #0f3460;
@@ -51,7 +47,6 @@
             --input-bg: #0f3460;
             --input-color: #e0e0e0;
         }
-
         .theme-toggle {
             background: #1a252f; border: none; color: #7f8c8d;
             font-size: 11px; padding: 12px 12px; cursor: pointer;
@@ -61,20 +56,15 @@
         }
         .theme-toggle:hover { color: white; }
         .theme-toggle.active { color: white; border-left: 3px solid var(--skype-blue); padding-left: 9px; }
-
         * { box-sizing: border-box; border-radius: 0 !important; }
         button, .icon-btn, .theme-toggle { transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease; }
-
         button:not(:disabled):active { transform: scale(0.95) translateY(1px); }
-
         button[onclick="connectToPeer()"] { position: relative; overflow: hidden; }
         button[onclick="connectToPeer()"]:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,175,240,0.4); }
         button[onclick="connectToPeer()"]:not(:disabled):active { transform: translateY(0px); box-shadow: none; }
-
         button[onclick="startCall()"] { position: relative; overflow: hidden; }
         button[onclick="startCall()"]:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(46,204,113,0.4); }
         button[onclick="startCall()"]:not(:disabled):active { transform: scale(0.95); }
-
         @keyframes callPulse {
             0%   { box-shadow: 0 0 0 0 rgba(46,204,113,0.5); }
             70%  { box-shadow: 0 0 0 8px rgba(46,204,113,0); }
@@ -87,22 +77,17 @@
         }
         button[onclick="startCall()"]:not(:disabled):hover { animation: callPulse 1.2s infinite; }
         button[onclick="connectToPeer()"]:not(:disabled):hover { animation: connectPulse 1.2s infinite; }
-
         .icon-btn[onclick="sendMessage()"] { transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important; }
         .icon-btn[onclick="sendMessage()"]:hover { transform: translateX(4px) scale(1.15); }
         .icon-btn[onclick="sendMessage()"]:active { transform: translateX(8px) scale(0.95); }
-
         label.icon-btn { transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important; }
         label.icon-btn:hover { transform: scale(1.2) rotate(-5deg); }
         label.icon-btn:active { transform: scale(0.9); }
-
         .lang-btn { transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important; }
         .lang-btn:hover { transform: translateY(-2px); color: #ccc; }
         .lang-btn:active { transform: translateY(0); }
-
         .theme-toggle:hover { transform: translateX(3px); }
         .theme-toggle:active { transform: translateX(0); }
-
         @keyframes sosShake {
             0%,100% { transform: translateX(0); }
             20%     { transform: translateX(-3px) rotate(-1deg); }
@@ -112,11 +97,9 @@
         }
         .sos-btn:not(:disabled):hover { animation: sosShake 0.4s ease; box-shadow: 0 0 12px rgba(231,76,60,0.6); }
         .sos-btn:not(:disabled):active { transform: scale(0.93); box-shadow: none; }
-
         #call-overlay button:hover { transform: scale(1.05); filter: brightness(1.15); }
         #call-overlay button:active { transform: scale(0.96); }
         body, html { height: 100%; margin: 0; font-family: 'Ubuntu', sans-serif; font-weight: 300; overflow: hidden; background-color: var(--sidebar-bg); }
-
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--sidebar-bg); display: flex; flex-direction: column;
@@ -127,141 +110,75 @@
         .splash-loader { width: 50px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 20px; position: relative; overflow: hidden; }
         .splash-loader::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--skype-blue); animation: loading 1.5s infinite; }
         @keyframes loading { 100% { left: 100%; } }
-
         .app-container { display: flex; height: 100vh; width: 100vw; opacity: 0; }
         .loaded .app-container { opacity: 1; }
-
         .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 25px; border-right: 1px solid #1a252f; z-index: 10; }
         .brand-section { margin-bottom: 30px; }
         .brand-name { color: var(--skype-blue); font-size: 32px; font-weight: 700; margin: 0; }
         .sidebar-slogan { font-size: 10px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 2px; }
-
         .my-status-box { background: rgba(0,0,0,0.2); padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--skype-blue); }
         .status-input { width: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 14px; outline: none; border-bottom: 1px solid #34495e; padding-bottom: 5px; }
-
         .lang-switcher { display: flex; flex-direction: row; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
         .lang-btn { background: #1a252f; border: none; color: #7f8c8d; font-size: 11px; padding: 8px 10px; cursor: pointer; font-weight: bold; letter-spacing: 1px; flex: 1; text-align: center; transition: none; }
         .lang-btn.active { color: white; border-bottom: 2px solid var(--skype-blue); }
-
         .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); position: relative; }
         #chat-box { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-        
         .msg { max-width: 70%; padding: 12px 18px; line-height: 1.6; position: relative; font-size: 14px; animation: msgIn 0.3s ease-out; }
         @keyframes msgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .local { background: var(--msg-local); align-self: flex-end; border: 1px solid var(--msg-local-border); border-right: 4px solid var(--skype-blue); color: var(--chat-text); }
         .remote { background: var(--msg-remote); align-self: flex-start; border: 1px solid var(--msg-remote-border); border-left: 4px solid #bdc3c7; color: var(--chat-text); }
         .msg-meta { font-size: 9px; margin-top: 5px; color: #999; display: flex; justify-content: flex-end; align-items: center; gap: 3px; }
         .seen-icon { color: var(--skype-blue); font-weight: bold; }
-
         .msg-sos {
-            max-width: 90%;
-            align-self: center;
-            background: #2d0000;
-            border: 2px solid var(--sos-red);
-            border-left: 6px solid var(--sos-red);
-            color: #ff6b6b;
-            padding: 14px 20px;
-            font-size: 14px;
-            animation: sosPulse 0.5s ease-out, msgIn 0.3s ease-out;
-            position: relative;
+            max-width: 90%; align-self: center; background: #2d0000;
+            border: 2px solid var(--sos-red); border-left: 6px solid var(--sos-red);
+            color: #ff6b6b; padding: 14px 20px; font-size: 14px;
+            animation: sosPulse 0.5s ease-out, msgIn 0.3s ease-out; position: relative;
         }
         @keyframes sosPulse {
             0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.7); }
             70% { box-shadow: 0 0 0 12px rgba(231,76,60,0); }
             100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); }
         }
-        .sos-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--sos-red);
-            margin-bottom: 5px;
-        }
-        .sos-from {
-            font-size: 11px;
-            color: #ff9999;
-            margin-top: 6px;
-        }
-        .sos-hop {
-            font-size: 9px;
-            color: #884444;
-            margin-top: 3px;
-        }
-
+        .sos-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--sos-red); margin-bottom: 5px; }
+        .sos-from { font-size: 11px; color: #ff9999; margin-top: 6px; }
+        .sos-hop { font-size: 9px; color: #884444; margin-top: 3px; }
         .sos-btn {
-            background: var(--sos-red);
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Ubuntu', sans-serif;
-            letter-spacing: 1px;
-            font-size: 11px;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.2s ease !important;
-            width: auto;
-            align-self: flex-start;
+            background: var(--sos-red); color: white; border: none; padding: 6px 10px;
+            font-weight: bold; cursor: pointer; font-family: 'Ubuntu', sans-serif;
+            letter-spacing: 1px; font-size: 11px; position: relative; overflow: hidden;
+            transition: background 0.2s ease !important; width: auto; align-self: flex-start;
         }
         .sos-btn:hover { background: var(--sos-dark); }
-        .sos-btn:disabled {
-            background: #555;
-            cursor: not-allowed;
-            color: #999;
-            letter-spacing: 0px;
-        }
+        .sos-btn:disabled { background: #555; cursor: not-allowed; color: #999; letter-spacing: 0px; }
         .sos-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: rgba(255,255,255,0.15);
-            transition: left 0.3s ease;
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%; background: rgba(255,255,255,0.15); transition: left 0.3s ease;
         }
         .sos-btn:not(:disabled):hover::after { left: 100%; }
-
         .input-area { padding: 20px 30px; display: flex; gap: 15px; border-top: 1px solid var(--input-border); background: var(--input-area-bg); align-items: center; }
         #message-input { flex: 1; padding: 14px; border: 1px solid var(--input-border); outline: none; font-size: 14px; background: var(--input-bg); color: var(--input-color); border-radius: 4px !important; }
-        
         .icon-btn { cursor: pointer; display: flex; align-items: center; transition: 0.2s; user-select: none; color: var(--skype-blue); }
         .icon-btn:hover { transform: none !important; }
-
         .mountain-icon { width: 24px; height: 24px; position: relative; overflow: hidden; border: 2px solid currentColor; border-radius: 4px !important; }
         .mountain-icon::before { content: ''; position: absolute; bottom: -2px; left: 1px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid currentColor; }
         .mountain-icon::after { content: ''; position: absolute; bottom: -2px; left: 8px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid currentColor; }
         .sun { position: absolute; top: 3px; right: 3px; width: 5px; height: 5px; background: currentColor; border-radius: 50% !important; }
-
         .right-bar { width: 240px; background: #fcfcfc; border-left: 1px solid #eee; padding: 25px 20px; }
         .online-title { font-size: 12px; font-weight: 700; color: #95a5a6; letter-spacing: 1px; margin-bottom: 20px; display: flex; justify-content: space-between; }
         .online-count { background: var(--skype-blue); color: white; padding: 2px 8px; font-size: 10px; }
         .user-card { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
         .user-avatar { width: 35px; height: 35px; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 12px; }
-
         #call-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(44, 62, 80, 0.95); z-index: 10000;
             display: none; flex-direction: column; align-items: center; justify-content: center; color: white;
         }
-
-        body.dark-chat .right-bar {
-            background: var(--sidebar-bg);
-            border-left: 1px solid #1a252f;
-            color: #e0e0e0;
-        }
+        body.dark-chat .right-bar { background: var(--sidebar-bg); border-left: 1px solid #1a252f; color: #e0e0e0; }
         body.dark-chat .right-bar .online-title { color: #7f8c8d; }
         body.dark-chat .user-card { border-bottom: 1px solid #1a252f; }
         body.dark-chat .user-name { color: #e0e0e0; }
-
-        #sos-timer {
-            font-size: 9px;
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 4px;
-            min-height: 14px;
-            letter-spacing: 1px;
-        }
+        #sos-timer { font-size: 9px; color: #e74c3c; text-align: center; margin-top: 4px; min-height: 14px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -299,6 +216,7 @@
             <button class="lang-btn" onclick="setLanguage('de')">DE</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Koyu Mod</button>
             <button class="theme-toggle" onclick="document.getElementById('wallpaper-input').click()" style="margin-top:5px;">🖼️ Duvar Kağıdı</button>
+            <button class="theme-toggle" onclick="resetWallpaper()" style="margin-top:2px;">↺ Varsayılan WP</button>
             <input type="file" id="wallpaper-input" accept="image/*" style="display:none" onchange="setWallpaper(this)">
         </div>
 
@@ -355,22 +273,32 @@
 <audio id="remote-audio" autoplay></audio>
 
 <script>
-    // Duvar kağıdı fonksiyonu
+    const DEFAULT_WALLPAPER = "https://raw.githubusercontent.com/benmalakko-netizen/AceTalk/main/Acetalkwallpaper.jpg";
+
+    function applyWallpaper(url) {
+        document.body.style.backgroundImage = "url('" + url + "')";
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.classList.add('wallpaper-active');
+    }
+
     function setWallpaper(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = e => {
-                document.body.style.backgroundImage = `url('${e.target.result}')`;
-                document.body.style.backgroundSize = "cover";
-                document.body.style.backgroundPosition = "center";
-                document.body.style.backgroundAttachment = "fixed";
-                document.body.classList.add('wallpaper-active');
+                localStorage.setItem('acetalk_wallpaper', e.target.result);
+                applyWallpaper(e.target.result);
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    // [Senin mevcut JavaScript kodlarının devamı...]
+    function resetWallpaper() {
+        localStorage.removeItem('acetalk_wallpaper');
+        applyWallpaper(DEFAULT_WALLPAPER);
+    }
+
     const i18n = {
         tr: {
             myName: "ADIM", idPlaceholder: "Bağlanılacak ID...", connectBtn: "BAĞLAN", voiceCall: "SESLİ ARA",
@@ -441,7 +369,11 @@
         });
     }
 
-    window.addEventListener('load', () => setTimeout(() => document.body.classList.add('loaded'), 2500));
+    window.addEventListener('load', () => {
+        setTimeout(() => document.body.classList.add('loaded'), 2500);
+        const saved = localStorage.getItem('acetalk_wallpaper');
+        applyWallpaper(saved || DEFAULT_WALLPAPER);
+    });
 
     const peer = new Peer();
     let connections = [];
@@ -490,25 +422,11 @@
     const SOS_COOLDOWN = 60;
 
     function sendSOS() {
-        if(connections.length === 0) {
-            alert(i18n[currentLang].sosNoConn);
-            return;
-        }
-
+        if(connections.length === 0) { alert(i18n[currentLang].sosNoConn); return; }
         const myName = document.getElementById('my-name-input').value;
         const myId  = document.getElementById('my-id').innerText;
         const sosId  = myId + '_' + Date.now();
-
-        const sosPacket = {
-            type:     'sos',
-            id:       sosId,
-            fromId:   myId,
-            fromName: myName,
-            ttl:      5,
-            hopCount: 0,
-            timestamp: Date.now()
-        };
-
+        const sosPacket = { type: 'sos', id: sosId, fromId: myId, fromName: myName, ttl: 5, hopCount: 0, timestamp: Date.now() };
         seenSOS.add(sosId);
         addSOSMessage(myName, 0, true);
         connections.forEach(c => c.send(sosPacket));
@@ -518,16 +436,10 @@
     function handleSOS(data) {
         if(seenSOS.has(data.id)) return;
         if(data.ttl <= 0) return;
-
         seenSOS.add(data.id);
         playAudio('snd-sos');
         addSOSMessage(data.fromName, data.hopCount + 1, false);
-
-        const forwardPacket = {
-            ...data,
-            ttl:      data.ttl - 1,
-            hopCount: data.hopCount + 1
-        };
+        const forwardPacket = { ...data, ttl: data.ttl - 1, hopCount: data.hopCount + 1 };
         connections.forEach(c => c.send(forwardPacket));
     }
 
@@ -535,42 +447,28 @@
         const box  = document.getElementById('chat-box');
         const lang = i18n[currentLang];
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        const hopText = hops > 0
-            ? `<div class="sos-hop">↳ ${hops} ${lang.sosHops}</div>`
-            : '';
-
-        box.innerHTML += `
-            <div class="msg msg-sos">
-                <div class="sos-label">⚠ ${lang.sosReceived}</div>
-                <b style="font-size:15px;">${isSelf ? '🆘 ' + fromName : '🚨 ' + fromName}</b>
-                <div class="sos-from">${lang.sosFrom}: ${fromName}</div>
-                ${hopText}
-                <div class="msg-meta" style="color:#884444;">${time}</div>
-            </div>`;
+        const hopText = hops > 0 ? '<div class="sos-hop">↳ ' + hops + ' ' + lang.sosHops + '</div>' : '';
+        box.innerHTML += '<div class="msg msg-sos"><div class="sos-label">⚠ ' + lang.sosReceived + '</div><b style="font-size:15px;">' + (isSelf ? '🆘 ' : '🚨 ') + fromName + '</b><div class="sos-from">' + lang.sosFrom + ': ' + fromName + '</div>' + hopText + '<div class="msg-meta" style="color:#884444;">' + time + '</div></div>';
         box.scrollTop = box.scrollHeight;
-
-        document.title = `🚨 SOS – ${fromName} | AceTalk`;
+        document.title = '🚨 SOS – ' + fromName + ' | AceTalk';
         setTimeout(() => document.title = 'AceTalk | Simple Messenger', 8000);
     }
 
     function startSOSCooldown() {
-        const btn       = document.getElementById('sos-btn');
-        const timerEl   = document.getElementById('sos-timer');
-        btn.disabled    = true;
-        let remaining   = SOS_COOLDOWN;
-
-        timerEl.innerText = `${remaining} ${i18n[currentLang].sosCooldown}`;
-
+        const btn = document.getElementById('sos-btn');
+        const timerEl = document.getElementById('sos-timer');
+        btn.disabled = true;
+        let remaining = SOS_COOLDOWN;
+        timerEl.innerText = remaining + ' ' + i18n[currentLang].sosCooldown;
         sosCooldownTimer = setInterval(() => {
             remaining--;
             if(remaining <= 0) {
                 clearInterval(sosCooldownTimer);
-                btn.disabled    = false;
+                btn.disabled = false;
                 timerEl.innerText = '';
-                btn.innerText   = i18n[currentLang].sosBtn;
+                btn.innerText = i18n[currentLang].sosBtn;
             } else {
-                timerEl.innerText = `${remaining} ${i18n[currentLang].sosCooldown}`;
+                timerEl.innerText = remaining + ' ' + i18n[currentLang].sosCooldown;
             }
         }, 1000);
     }
@@ -593,7 +491,6 @@
         const myName = document.getElementById('my-name-input').value;
         const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         if(input.value.trim() === "") return;
-        
         connections.forEach(c => c.send({type: 'msg', name: myName, body: input.value, time: time}));
         addMessage("", parseMarkdown(input.value), 'local', time);
         input.value = "";
@@ -604,22 +501,13 @@
         const box = document.getElementById('chat-box');
         const displayTime = time.substring(0, 5);
         const id = time.replace(/:/g, '');
-        
-        box.innerHTML += `
-            <div class="msg ${type}">
-                ${user ? `<strong>${user}</strong><br>` : ''}
-                ${text}
-                <div class="msg-meta">
-                    ${displayTime} 
-                    ${type === 'local' ? `<span id="seen-${id}" style="margin-left:4px;">✔</span>` : ''}
-                </div>
-            </div>`;
+        box.innerHTML += '<div class="msg ' + type + '">' + (user ? '<strong>' + user + '</strong><br>' : '') + text + '<div class="msg-meta">' + displayTime + (type === 'local' ? ' <span id="seen-' + id + '" style="margin-left:4px;">✔</span>' : '') + '</div></div>';
         box.scrollTop = box.scrollHeight;
     }
 
     function markAsSeen(time) {
         const id = time.replace(/:/g, '');
-        const el = document.getElementById(`seen-${id}`);
+        const el = document.getElementById('seen-' + id);
         if(el) { el.innerHTML = '✔✔'; el.classList.add('seen-icon'); }
     }
 
@@ -627,7 +515,7 @@
         if(input.files[0]) {
             const reader = new FileReader();
             reader.onload = e => {
-                const imgHtml = `<img src="${e.target.result}" style="max-width:100%; border-radius:2px; margin-top:5px; display:block;">`;
+                const imgHtml = '<img src="' + e.target.result + '" style="max-width:100%; border-radius:2px; margin-top:5px; display:block;">';
                 sendSpecialMessage(imgHtml);
             };
             reader.readAsDataURL(input.files[0]);
@@ -652,22 +540,15 @@
 
     function showTyping(name, state) {
         const ui = document.getElementById('typing-ui');
-        if(state) {
-            ui.innerText = `${name} ${i18n[currentLang].typing}`;
-            ui.style.display = 'block';
-        } else {
-            ui.style.display = 'none';
-        }
+        if(state) { ui.innerText = name + ' ' + i18n[currentLang].typing; ui.style.display = 'block'; }
+        else { ui.style.display = 'none'; }
     }
 
     function stringToColor(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
         let color = '#';
-        for (let i = 0; i < 3; i++) {
-            let value = (hash >> (i * 8)) & 0xFF;
-            color += ('00' + value.toString(16)).substr(-2);
-        }
+        for (let i = 0; i < 3; i++) { let value = (hash >> (i * 8)) & 0xFF; color += ('00' + value.toString(16)).substr(-2); }
         return color;
     }
 
@@ -677,14 +558,7 @@
         list.innerHTML = "";
         connections.forEach(c => {
             const displayName = peerNames[c.peer] || "Bağlanıyor...";
-            list.innerHTML += `
-                <div class="user-card" style="flex-direction:column; align-items:flex-start; gap:2px;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div class="user-avatar" style="background:${stringToColor(c.peer)}">${displayName.charAt(0).toUpperCase()}</div>
-                        <div class="user-name">${displayName}</div>
-                    </div>
-                    <div class="user-status" style="font-size:9px; color:#999;">ID: ${c.peer.substring(0,8)}...</div>
-                </div>`;
+            list.innerHTML += '<div class="user-card" style="flex-direction:column; align-items:flex-start; gap:2px;"><div style="display:flex; align-items:center; gap:10px;"><div class="user-avatar" style="background:' + stringToColor(c.peer) + '">' + displayName.charAt(0).toUpperCase() + '</div><div class="user-name">' + displayName + '</div></div><div class="user-status" style="font-size:9px; color:#999;">ID: ' + c.peer.substring(0,8) + '...</div></div>';
         });
     }
     
