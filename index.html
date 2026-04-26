@@ -1,308 +1,305 @@
+bide kod <!DOCTYPE html>
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>AceTalk | Simple Messenger</title>
-    <link rel="icon" type="image/png" href="icon-192.png?v=2">
-    <link rel="apple-touch-icon" href="icon-192.png?v=2">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <style>
-        /* CSS kodların aynı kalacak, sadece <head> bloğunu güncelledim */
-        /* ... (diğer stillerin burada duruyor) ... */
-    </style>
-</head>
-        :root {
-            --skype-blue: #00aff0;
-            --sidebar-bg: #2c3e50;
-            --chat-bg: #ffffff;
-            --call-green: #2ecc71;
-            --call-red: #e74c3c;
-            --msg-local: #f0faff;
-            --msg-remote: #f9f9f9;
-            --msg-local-border: #d1ecf1;
-            --msg-remote-border: #eee;
-            --chat-text: #333;
-            --input-area-bg: #fff;
-            --input-border: #ddd;
-            --input-bg: #fdfdfd;
-            --input-color: #333;
-            --sos-red: #e74c3c;
-            --sos-dark: #c0392b;
-        }
+    <meta charset="UTF-8">
+    <title>AceTalk | Simple Messenger</title>
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <style>
+        :root {
+            --skype-blue: #00aff0;
+            --sidebar-bg: #2c3e50;
+            --chat-bg: #ffffff;
+            --call-green: #2ecc71;
+            --call-red: #e74c3c;
+            --msg-local: #f0faff;
+            --msg-remote: #f9f9f9;
+            --msg-local-border: #d1ecf1;
+            --msg-remote-border: #eee;
+            --chat-text: #333;
+            --input-area-bg: #fff;
+            --input-border: #ddd;
+            --input-bg: #fdfdfd;
+            --input-color: #333;
+            --sos-red: #e74c3c;
+            --sos-dark: #c0392b;
+        }
 
-        body.dark-chat {
-            --chat-bg: #1a1a2e;
-            --msg-local: #0f3460;
-            --msg-remote: #16213e;
-            --msg-local-border: #00aff0;
-            --msg-remote-border: #2a2a4a;
-            --chat-text: #e0e0e0;
-            --input-area-bg: #16213e;
-            --input-border: #2a2a4a;
-            --input-bg: #0f3460;
-            --input-color: #e0e0e0;
-        }
+        body.dark-chat {
+            --chat-bg: #1a1a2e;
+            --msg-local: #0f3460;
+            --msg-remote: #16213e;
+            --msg-local-border: #00aff0;
+            --msg-remote-border: #2a2a4a;
+            --chat-text: #e0e0e0;
+            --input-area-bg: #16213e;
+            --input-border: #2a2a4a;
+            --input-bg: #0f3460;
+            --input-color: #e0e0e0;
+        }
 
-        .theme-toggle {
-            background: #1a252f; border: none; color: #7f8c8d;
-            font-size: 11px; padding: 12px 12px; cursor: pointer;
-            font-weight: bold; text-align: left; letter-spacing: 1px;
-            width: 100%; font-family: 'Ubuntu', sans-serif;
-            transition: all 0.2s ease;
-        }
-        .theme-toggle:hover { color: white; }
-        .theme-toggle.active { color: white; border-left: 3px solid var(--skype-blue); padding-left: 9px; }
+        .theme-toggle {
+            background: #1a252f; border: none; color: #7f8c8d;
+            font-size: 11px; padding: 12px 12px; cursor: pointer;
+            font-weight: bold; text-align: left; letter-spacing: 1px;
+            width: 100%; font-family: 'Ubuntu', sans-serif;
+            transition: all 0.2s ease;
+        }
+        .theme-toggle:hover { color: white; }
+        .theme-toggle.active { color: white; border-left: 3px solid var(--skype-blue); padding-left: 9px; }
 
-        * { box-sizing: border-box; border-radius: 0 !important; }
-        button, .icon-btn, .theme-toggle { transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease; }
+        * { box-sizing: border-box; border-radius: 0 !important; }
+        button, .icon-btn, .theme-toggle { transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease; }
 
-        button:not(:disabled):active {
-            transform: scale(0.95) translateY(1px);
-        }
+        button:not(:disabled):active {
+            transform: scale(0.95) translateY(1px);
+        }
 
-        button[onclick="connectToPeer()"] {
-            position: relative; overflow: hidden;
-        }
-        button[onclick="connectToPeer()"]:not(:disabled):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,175,240,0.4);
-        }
-        button[onclick="connectToPeer()"]:not(:disabled):active {
-            transform: translateY(0px);
-            box-shadow: none;
-        }
+        button[onclick="connectToPeer()"] {
+            position: relative; overflow: hidden;
+        }
+        button[onclick="connectToPeer()"]:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,175,240,0.4);
+        }
+        button[onclick="connectToPeer()"]:not(:disabled):active {
+            transform: translateY(0px);
+            box-shadow: none;
+        }
 
-        button[onclick="startCall()"] {
-            position: relative; overflow: hidden;
-        }
-        button[onclick="startCall()"]:not(:disabled):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(46,204,113,0.4);
-        }
-        button[onclick="startCall()"]:not(:disabled):active {
-            transform: scale(0.95);
-        }
+        button[onclick="startCall()"] {
+            position: relative; overflow: hidden;
+        }
+        button[onclick="startCall()"]:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(46,204,113,0.4);
+        }
+        button[onclick="startCall()"]:not(:disabled):active {
+            transform: scale(0.95);
+        }
 
-        @keyframes callPulse {
-            0%   { box-shadow: 0 0 0 0 rgba(46,204,113,0.5); }
-            70%  { box-shadow: 0 0 0 8px rgba(46,204,113,0); }
-            100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); }
-        }
-        @keyframes connectPulse {
-            0%   { box-shadow: 0 0 0 0 rgba(0,175,240,0.5); }
-            70%  { box-shadow: 0 0 0 8px rgba(0,175,240,0); }
-            100% { box-shadow: 0 0 0 0 rgba(0,175,240,0); }
-        }
-        button[onclick="startCall()"]:not(:disabled):hover {
-            animation: callPulse 1.2s infinite;
-        }
-        button[onclick="connectToPeer()"]:not(:disabled):hover {
-            animation: connectPulse 1.2s infinite;
-        }
+        @keyframes callPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(46,204,113,0.5); }
+            70%  { box-shadow: 0 0 0 8px rgba(46,204,113,0); }
+            100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); }
+        }
+        @keyframes connectPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(0,175,240,0.5); }
+            70%  { box-shadow: 0 0 0 8px rgba(0,175,240,0); }
+            100% { box-shadow: 0 0 0 0 rgba(0,175,240,0); }
+        }
+        button[onclick="startCall()"]:not(:disabled):hover {
+            animation: callPulse 1.2s infinite;
+        }
+        button[onclick="connectToPeer()"]:not(:disabled):hover {
+            animation: connectPulse 1.2s infinite;
+        }
 
-        .icon-btn[onclick="sendMessage()"] {
-            transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important;
-        }
-        .icon-btn[onclick="sendMessage()"]:hover {
-            transform: translateX(4px) scale(1.15);
-        }
-        .icon-btn[onclick="sendMessage()"]:active {
-            transform: translateX(8px) scale(0.95);
-        }
+        .icon-btn[onclick="sendMessage()"] {
+            transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important;
+        }
+        .icon-btn[onclick="sendMessage()"]:hover {
+            transform: translateX(4px) scale(1.15);
+        }
+        .icon-btn[onclick="sendMessage()"]:active {
+            transform: translateX(8px) scale(0.95);
+        }
 
-        label.icon-btn {
-            transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important;
-        }
-        label.icon-btn:hover {
-            transform: scale(1.2) rotate(-5deg);
-        }
-        label.icon-btn:active {
-            transform: scale(0.9);
-        }
+        label.icon-btn {
+            transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), color 0.2s ease !important;
+        }
+        label.icon-btn:hover {
+            transform: scale(1.2) rotate(-5deg);
+        }
+        label.icon-btn:active {
+            transform: scale(0.9);
+        }
 
-        .lang-btn {
-            transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
-        }
-        .lang-btn:hover {
-            transform: translateY(-2px);
-            color: #ccc;
-        }
-        .lang-btn:active { transform: translateY(0); }
+        .lang-btn {
+            transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
+        }
+        .lang-btn:hover {
+            transform: translateY(-2px);
+            color: #ccc;
+        }
+        .lang-btn:active { transform: translateY(0); }
 
-        .theme-toggle:hover { transform: translateX(3px); }
-        .theme-toggle:active { transform: translateX(0); }
+        .theme-toggle:hover { transform: translateX(3px); }
+        .theme-toggle:active { transform: translateX(0); }
 
-        @keyframes sosShake {
-            0%,100% { transform: translateX(0); }
-            20%      { transform: translateX(-3px) rotate(-1deg); }
-            40%      { transform: translateX(3px) rotate(1deg); }
-            60%      { transform: translateX(-2px); }
-            80%      { transform: translateX(2px); }
-        }
-        .sos-btn:not(:disabled):hover {
-            animation: sosShake 0.4s ease;
-            box-shadow: 0 0 12px rgba(231,76,60,0.6);
-        }
-        .sos-btn:not(:disabled):active {
-            transform: scale(0.93);
-            box-shadow: none;
-        }
+        @keyframes sosShake {
+            0%,100% { transform: translateX(0); }
+            20%      { transform: translateX(-3px) rotate(-1deg); }
+            40%      { transform: translateX(3px) rotate(1deg); }
+            60%      { transform: translateX(-2px); }
+            80%      { transform: translateX(2px); }
+        }
+        .sos-btn:not(:disabled):hover {
+            animation: sosShake 0.4s ease;
+            box-shadow: 0 0 12px rgba(231,76,60,0.6);
+        }
+        .sos-btn:not(:disabled):active {
+            transform: scale(0.93);
+            box-shadow: none;
+        }
 
-        #call-overlay button:hover {
-            transform: scale(1.05);
-            filter: brightness(1.15);
-        }
-        #call-overlay button:active {
-            transform: scale(0.96);
-        }
-        body, html { height: 100%; margin: 0; font-family: 'Ubuntu', sans-serif; font-weight: 300; overflow: hidden; background-color: var(--sidebar-bg); }
+        #call-overlay button:hover {
+            transform: scale(1.05);
+            filter: brightness(1.15);
+        }
+        #call-overlay button:active {
+            transform: scale(0.96);
+        }
+        body, html { height: 100%; margin: 0; font-family: 'Ubuntu', sans-serif; font-weight: 300; overflow: hidden; background-color: var(--sidebar-bg); }
 
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--sidebar-bg); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 9999;
-            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
-        }
-        .loaded #splash-screen { transform: translateY(-100%); }
-        .splash-loader { width: 50px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 20px; position: relative; overflow: hidden; }
-        .splash-loader::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--skype-blue); animation: loading 1.5s infinite; }
-        @keyframes loading { 100% { left: 100%; } }
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--sidebar-bg); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999;
+            transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+        .loaded #splash-screen { transform: translateY(-100%); }
+        .splash-loader { width: 50px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 20px; position: relative; overflow: hidden; }
+        .splash-loader::after { content: ''; position: absolute; left: -100%; width: 100%; height: 100%; background: var(--skype-blue); animation: loading 1.5s infinite; }
+        @keyframes loading { 100% { left: 100%; } }
 
-        .app-container { display: flex; height: 100vh; width: 100vw; opacity: 0; }
-        .loaded .app-container { opacity: 1; }
+        .app-container { display: flex; height: 100vh; width: 100vw; opacity: 0; }
+        .loaded .app-container { opacity: 1; }
 
-        .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 25px; border-right: 1px solid #1a252f; z-index: 10; }
-        .brand-section { margin-bottom: 30px; }
-        .brand-name { color: var(--skype-blue); font-size: 32px; font-weight: 700; margin: 0; }
-        .sidebar-slogan { font-size: 10px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 2px; }
+        .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 25px; border-right: 1px solid #1a252f; z-index: 10; }
+        .brand-section { margin-bottom: 30px; }
+        .brand-name { color: var(--skype-blue); font-size: 32px; font-weight: 700; margin: 0; }
+        .sidebar-slogan { font-size: 10px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 2px; }
 
-        .my-status-box { background: rgba(0,0,0,0.2); padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--skype-blue); }
-        .status-input { width: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 14px; outline: none; border-bottom: 1px solid #34495e; padding-bottom: 5px; }
+        .my-status-box { background: rgba(0,0,0,0.2); padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--skype-blue); }
+        .status-input { width: 100%; background: transparent; border: none; color: white; font-weight: bold; font-size: 14px; outline: none; border-bottom: 1px solid #34495e; padding-bottom: 5px; }
 
-        .lang-switcher { display: flex; flex-direction: row; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
-        .lang-btn { background: #1a252f; border: none; color: #7f8c8d; font-size: 11px; padding: 8px 10px; cursor: pointer; font-weight: bold; letter-spacing: 1px; flex: 1; text-align: center; transition: none; }
-        .lang-btn.active { color: white; border-bottom: 2px solid var(--skype-blue); }
+        .lang-switcher { display: flex; flex-direction: row; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
+        .lang-btn { background: #1a252f; border: none; color: #7f8c8d; font-size: 11px; padding: 8px 10px; cursor: pointer; font-weight: bold; letter-spacing: 1px; flex: 1; text-align: center; transition: none; }
+        .lang-btn.active { color: white; border-bottom: 2px solid var(--skype-blue); }
 
-        .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); position: relative; }
-        #chat-box { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-        
-        .msg { max-width: 70%; padding: 12px 18px; line-height: 1.6; position: relative; font-size: 14px; animation: msgIn 0.3s ease-out; }
-        @keyframes msgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .local { background: var(--msg-local); align-self: flex-end; border: 1px solid var(--msg-local-border); border-right: 4px solid var(--skype-blue); color: var(--chat-text); }
-        .remote { background: var(--msg-remote); align-self: flex-start; border: 1px solid var(--msg-remote-border); border-left: 4px solid #bdc3c7; color: var(--chat-text); }
-        .msg-meta { font-size: 9px; margin-top: 5px; color: #999; display: flex; justify-content: flex-end; align-items: center; gap: 3px; }
-        .seen-icon { color: var(--skype-blue); font-weight: bold; }
+        .main-chat { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); position: relative; }
+        #chat-box { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        
+        .msg { max-width: 70%; padding: 12px 18px; line-height: 1.6; position: relative; font-size: 14px; animation: msgIn 0.3s ease-out; }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .local { background: var(--msg-local); align-self: flex-end; border: 1px solid var(--msg-local-border); border-right: 4px solid var(--skype-blue); color: var(--chat-text); }
+        .remote { background: var(--msg-remote); align-self: flex-start; border: 1px solid var(--msg-remote-border); border-left: 4px solid #bdc3c7; color: var(--chat-text); }
+        .msg-meta { font-size: 9px; margin-top: 5px; color: #999; display: flex; justify-content: flex-end; align-items: center; gap: 3px; }
+        .seen-icon { color: var(--skype-blue); font-weight: bold; }
 
-        .msg-sos {
-            max-width: 90%;
-            align-self: center;
-            background: #2d0000;
-            border: 2px solid var(--sos-red);
-            border-left: 6px solid var(--sos-red);
-            color: #ff6b6b;
-            padding: 14px 20px;
-            font-size: 14px;
-            animation: sosPulse 0.5s ease-out, msgIn 0.3s ease-out;
-            position: relative;
-        }
-        @keyframes sosPulse {
-            0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.7); }
-            70% { box-shadow: 0 0 0 12px rgba(231,76,60,0); }
-            100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); }
-        }
-        .sos-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--sos-red);
-            margin-bottom: 5px;
-        }
-        .sos-from {
-            font-size: 11px;
-            color: #ff9999;
-            margin-top: 6px;
-        }
-        .sos-hop {
-            font-size: 9px;
-            color: #884444;
-            margin-top: 3px;
-        }
+        .msg-sos {
+            max-width: 90%;
+            align-self: center;
+            background: #2d0000;
+            border: 2px solid var(--sos-red);
+            border-left: 6px solid var(--sos-red);
+            color: #ff6b6b;
+            padding: 14px 20px;
+            font-size: 14px;
+            animation: sosPulse 0.5s ease-out, msgIn 0.3s ease-out;
+            position: relative;
+        }
+        @keyframes sosPulse {
+            0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(231,76,60,0); }
+            100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); }
+        }
+        .sos-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--sos-red);
+            margin-bottom: 5px;
+        }
+        .sos-from {
+            font-size: 11px;
+            color: #ff9999;
+            margin-top: 6px;
+        }
+        .sos-hop {
+            font-size: 9px;
+            color: #884444;
+            margin-top: 3px;
+        }
 
-        .sos-btn {
-            background: var(--sos-red);
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Ubuntu', sans-serif;
-            letter-spacing: 1px;
-            font-size: 11px;
-            position: relative;
-            overflow: hidden;
-            transition: background 0.2s ease !important;
-            width: auto;
-            align-self: flex-start;
-        }
-        .sos-btn:hover { background: var(--sos-dark); }
-        .sos-btn:disabled {
-            background: #555;
-            cursor: not-allowed;
-            color: #999;
-            letter-spacing: 0px;
-        }
-        .sos-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: rgba(255,255,255,0.15);
-            transition: left 0.3s ease;
-        }
-        .sos-btn:not(:disabled):hover::after { left: 100%; }
+        .sos-btn {
+            background: var(--sos-red);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Ubuntu', sans-serif;
+            letter-spacing: 1px;
+            font-size: 11px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.2s ease !important;
+            width: auto;
+            align-self: flex-start;
+        }
+        .sos-btn:hover { background: var(--sos-dark); }
+        .sos-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            color: #999;
+            letter-spacing: 0px;
+        }
+        .sos-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: rgba(255,255,255,0.15);
+            transition: left 0.3s ease;
+        }
+        .sos-btn:not(:disabled):hover::after { left: 100%; }
 
-        .input-area { padding: 20px 30px; display: flex; gap: 15px; border-top: 1px solid var(--input-border); background: var(--input-area-bg); align-items: center; }
-        #message-input { flex: 1; padding: 14px; border: 1px solid var(--input-border); outline: none; font-size: 14px; background: var(--input-bg); color: var(--input-color); border-radius: 4px !important; }
-        
-        .icon-btn { cursor: pointer; display: flex; align-items: center; transition: 0.2s; user-select: none; color: var(--skype-blue); }
-        .icon-btn:hover { transform: none !important; }
+        .input-area { padding: 20px 30px; display: flex; gap: 15px; border-top: 1px solid var(--input-border); background: var(--input-area-bg); align-items: center; }
+        #message-input { flex: 1; padding: 14px; border: 1px solid var(--input-border); outline: none; font-size: 14px; background: var(--input-bg); color: var(--input-color); border-radius: 4px !important; }
+        
+        .icon-btn { cursor: pointer; display: flex; align-items: center; transition: 0.2s; user-select: none; color: var(--skype-blue); }
+        .icon-btn:hover { transform: none !important; }
 
-        .mountain-icon { width: 24px; height: 24px; position: relative; overflow: hidden; border: 2px solid currentColor; border-radius: 4px !important; }
-        .mountain-icon::before { content: ''; position: absolute; bottom: -2px; left: 1px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid currentColor; }
-        .mountain-icon::after { content: ''; position: absolute; bottom: -2px; left: 8px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid currentColor; }
-        .sun { position: absolute; top: 3px; right: 3px; width: 5px; height: 5px; background: currentColor; border-radius: 50% !important; }
+        .mountain-icon { width: 24px; height: 24px; position: relative; overflow: hidden; border: 2px solid currentColor; border-radius: 4px !important; }
+        .mountain-icon::before { content: ''; position: absolute; bottom: -2px; left: 1px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid currentColor; }
+        .mountain-icon::after { content: ''; position: absolute; bottom: -2px; left: 8px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid currentColor; }
+        .sun { position: absolute; top: 3px; right: 3px; width: 5px; height: 5px; background: currentColor; border-radius: 50% !important; }
 
-        .right-bar { width: 240px; background: #fcfcfc; border-left: 1px solid #eee; padding: 25px 20px; }
-        .online-title { font-size: 12px; font-weight: 700; color: #95a5a6; letter-spacing: 1px; margin-bottom: 20px; display: flex; justify-content: space-between; }
-        .online-count { background: var(--skype-blue); color: white; padding: 2px 8px; font-size: 10px; }
-        .user-card { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
-        .user-avatar { width: 35px; height: 35px; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 12px; }
+        .right-bar { width: 240px; background: #fcfcfc; border-left: 1px solid #eee; padding: 25px 20px; }
+        .online-title { font-size: 12px; font-weight: 700; color: #95a5a6; letter-spacing: 1px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+        .online-count { background: var(--skype-blue); color: white; padding: 2px 8px; font-size: 10px; }
+        .user-card { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .user-avatar { width: 35px; height: 35px; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 12px; }
 
-        #call-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(44, 62, 80, 0.95); z-index: 10000;
-            display: none; flex-direction: column; align-items: center; justify-content: center; color: white;
-        }
+        #call-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(44, 62, 80, 0.95); z-index: 10000;
+            display: none; flex-direction: column; align-items: center; justify-content: center; color: white;
+        }
 
-        body.dark-chat .right-bar {
-            background: var(--sidebar-bg);
-            border-left: 1px solid #1a252f;
-            color: #e0e0e0;
-        }
-        body.dark-chat .right-bar .online-title { color: #7f8c8d; }
-        body.dark-chat .user-card { border-bottom: 1px solid #1a252f; }
-        body.dark-chat .user-name { color: #e0e0e0; }
+        body.dark-chat .right-bar {
+            background: var(--sidebar-bg);
+            border-left: 1px solid #1a252f;
+            color: #e0e0e0;
+        }
+        body.dark-chat .right-bar .online-title { color: #7f8c8d; }
+        body.dark-chat .user-card { border-bottom: 1px solid #1a252f; }
+        body.dark-chat .user-name { color: #e0e0e0; }
 
-        #sos-timer {
-            font-size: 9px;
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 4px;
-            min-height: 14px;
-            letter-spacing: 1px;
-        }
-    </style>
+        #sos-timer {
+            font-size: 9px;
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 4px;
+            min-height: 14px;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 <body>
 
@@ -311,464 +308,431 @@
 <audio id="snd-sos" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
 
 <div id="call-overlay">
-    <div style="font-size: 60px; margin-bottom: 20px;">📞</div>
-    <h2 id="call-name">AceTalk Voice</h2>
-    <p id="call-status" data-i18n="calling">ARANIYOR...</p>
-    <button onclick="endCall()" data-i18n="closeCall" style="background: var(--call-red); color: white; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; margin-top: 30px;">KAPAT</button>
+    <div style="font-size: 60px; margin-bottom: 20px;">📞</div>
+    <h2 id="call-name">AceTalk Voice</h2>
+    <p id="call-status" data-i18n="calling">ARANIYOR...</p>
+    <button onclick="endCall()" data-i18n="closeCall" style="background: var(--call-red); color: white; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; margin-top: 30px;">KAPAT</button>
 </div>
 
 <div id="splash-screen">
-    <h1 style="color: var(--skype-blue); font-weight: 700; font-size: 48px; margin: 0;">AceTalk</h1>
-    <div class="sidebar-slogan" style="color: white; margin-top: 5px;">Simple Messenger</div>
-    <div class="splash-loader"></div>
+    <h1 style="color: var(--skype-blue); font-weight: 700; font-size: 48px; margin: 0;">AceTalk</h1>
+    <div class="sidebar-slogan" style="color: white; margin-top: 5px;">Simple Messenger</div>
+    <div class="splash-loader"></div>
 </div>
 
 <div class="app-container">
-    <div class="sidebar">
-        <div class="brand-section" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 30px;">
-            <div>
-                <h1 class="brand-name">AceTalk</h1>
-                <div class="sidebar-slogan">Simple Messenger</div>
-            </div>
-        </div>
+    <div class="sidebar">
+        <div class="brand-section" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 30px;">
+            <div>
+                <h1 class="brand-name">AceTalk</h1>
+                <div class="sidebar-slogan">Simple Messenger</div>
+            </div>
+        </div>
 
-        <div class="lang-switcher">
-            <button class="lang-btn active" onclick="setLanguage('tr')">TR</button>
-            <button class="lang-btn" onclick="setLanguage('en')">EN</button>
-            <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
-            <button class="lang-btn" onclick="setLanguage('de')">DE</button>
-            <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Koyu Mod</button>
-        </div>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="setLanguage('tr')">TR</button>
+            <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
+            <button class="lang-btn" onclick="setLanguage('de')">DE</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙 Koyu Mod</button>
+        </div>
 
-        <div class="my-status-box">
-            <b style="font-size: 10px; color: var(--skype-blue);" data-i18n="myName">ADIM</b>
-            <input type="text" id="my-name-input" class="status-input" value="AceUser" onchange="updateMyProfile()">
-            <small style="display:block; margin-top:15px; font-size: 9px; color: #7f8c8d;">ID: <span id="my-id" style="color: #00ffcc; cursor:pointer;" onclick="navigator.clipboard.writeText(this.innerText).then(()=>{this.style.color='#fff';setTimeout(()=>this.style.color='#00ffcc',1000)})" title="Kopyalamak için tıkla">...</span></small>
-        </div>
+        <div class="my-status-box">
+            <b style="font-size: 10px; color: var(--skype-blue);" data-i18n="myName">ADIM</b>
+            <input type="text" id="my-name-input" class="status-input" value="AceUser" onchange="updateMyProfile()">
+            <small style="display:block; margin-top:15px; font-size: 9px; color: #7f8c8d;">ID: <span id="my-id" style="color: #00ffcc; cursor:pointer;" onclick="navigator.clipboard.writeText(this.innerText).then(()=>{this.style.color='#fff';setTimeout(()=>this.style.color='#00ffcc',1000)})" title="Kopyalamak için tıkla">...</span></small>
+        </div>
 
-        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
-            <input type="text" id="peer-id-input" data-i18n-placeholder="idPlaceholder" placeholder="Bağlanılacak ID..." style="background: #1a252f; border: 1px solid #34495e; padding: 10px; color: white; outline: none;">
-            <button onclick="connectToPeer()" data-i18n="connectBtn" style="background: var(--skype-blue); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">BAĞLAN</button>
-            <button onclick="startCall()" data-i18n="voiceCall" style="background: var(--call-green); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">SESLİ ARA</button>
-            
-            <div style="display:flex; align-items:center; gap:8px;">
-                <button class="sos-btn" id="sos-btn" onclick="sendSOS()">🚨 ACİL</button>
-                <div id="sos-timer" style="font-size:9px; color:#e74c3c; letter-spacing:1px;"></div>
-            </div>
-        </div>
-    </div>
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px;">
+            <input type="text" id="peer-id-input" data-i18n-placeholder="idPlaceholder" placeholder="Bağlanılacak ID..." style="background: #1a252f; border: 1px solid #34495e; padding: 10px; color: white; outline: none;">
+            <button onclick="connectToPeer()" data-i18n="connectBtn" style="background: var(--skype-blue); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">BAĞLAN</button>
+            <button onclick="startCall()" data-i18n="voiceCall" style="background: var(--call-green); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer;">SESLİ ARA</button>
+            
+            <div style="display:flex; align-items:center; gap:8px;">
+                <button class="sos-btn" id="sos-btn" onclick="sendSOS()">🚨 ACİL</button>
+                <div id="sos-timer" style="font-size:9px; color:#e74c3c; letter-spacing:1px;"></div>
+            </div>
+        </div>
+    </div>
 
-    <div class="main-chat" id="drop-zone">
-        <div id="chat-box">
-            <div id="welcome-msg" style="margin: auto; text-align: center; color: #ccc;">
-                <p data-i18n="secureChat">Güvenli ve şifreli uçtan uca sohbet.</p>
-                <small data-i18n="enterId">Bağlanmak için bir ID girin.</small>
-            </div>
-        </div>
-        
-        <div class="typing-pulse" id="typing-ui" style="display:none; color: #00aff0; font-weight: bold; font-size: 11px; padding: 4px 30px;">birileri yazıyor...</div>
+    <div class="main-chat" id="drop-zone">
+        <div id="chat-box">
+            <div id="welcome-msg" style="margin: auto; text-align: center; color: #ccc;">
+                <p data-i18n="secureChat">Güvenli ve şifreli uçtan uca sohbet.</p>
+                <small data-i18n="enterId">Bağlanmak için bir ID girin.</small>
+            </div>
+        </div>
+        
+        <div class="typing-pulse" id="typing-ui" style="display:none; color: #00aff0; font-weight: bold; font-size: 11px; padding: 4px 30px;">birileri yazıyor...</div>
 
-        <div class="input-area">
-            <label for="img-input" class="icon-btn" title="Resim Gönder">
-                <div class="mountain-icon">
-                    <div class="sun"></div>
-                </div>
-            </label>
-            <input type="file" id="img-input" accept="image/*" style="display:none" onchange="handleImage(this)">
-            
-            <input type="text" id="message-input" data-i18n-placeholder="msgPlaceholder" placeholder="Mesajınızı yazın..." 
-                   onkeypress="if(event.key==='Enter') sendMessage()"
-                   oninput="notifyTyping()">
-            
-            <div class="icon-btn" onclick="sendMessage()" title="Gönder" style="font-size: 26px; color: var(--skype-blue);">➤</div>
-        </div>
-    </div>
+        <div class="input-area">
+            <label for="img-input" class="icon-btn" title="Resim Gönder">
+                <div class="mountain-icon">
+                    <div class="sun"></div>
+                </div>
+            </label>
+            <input type="file" id="img-input" accept="image/*" style="display:none" onchange="handleImage(this)">
+            
+            <input type="text" id="message-input" data-i18n-placeholder="msgPlaceholder" placeholder="Mesajınızı yazın..." 
+                   onkeypress="if(event.key==='Enter') sendMessage()"
+                   oninput="notifyTyping()">
+            
+            <div class="icon-btn" onclick="sendMessage()" title="Gönder" style="font-size: 26px; color: var(--skype-blue);">➤</div>
+        </div>
+    </div>
 
-    <div class="right-bar">
-        <div class="online-title"><span data-i18n="online">ÇEVRİMİÇİ</span> <span class="online-count" id="conn-count">0</span></div>
-        <div id="online-list"></div>
-    </div>
+    <div class="right-bar">
+        <div class="online-title"><span data-i18n="online">ÇEVRİMİÇİ</span> <span class="online-count" id="conn-count">0</span></div>
+        <div id="online-list"></div>
+    </div>
 </div>
 
 <audio id="remote-audio" autoplay></audio>
 
 <script>
-    const i18n = {
-        tr: {
-            myName: "ADIM",
-            idPlaceholder: "Bağlanılacak ID...",
-            connectBtn: "BAĞLAN",
-            voiceCall: "SESLİ ARA",
-            secureChat: "Güvenli ve şifreli uçtan uca sohbet.",
-            enterId: "Bağlanmak için bir ID girin.",
-            msgPlaceholder: "Mesajınızı yazın...",
-            online: "ÇEVRİMİÇİ",
-            calling: "ARANIYOR...",
-            closeCall: "KAPAT",
-            typing: "yazıyor...",
-            callAlert: "Arama geliyor!",
-            sosBtn: "🚨 ACİL YARDIM",
-            sosCooldown: "saniye bekle",
-            sosReceived: "ACİL YARDIM ÇAĞRISI",
-            sosFrom: "Gönderen",
-            sosHops: "ağ üzerinden ulaştı",
-            sosNoConn: "Bağlı kimse yok! Önce birine bağlan."
-        },
-        en: {
-            myName: "MY NAME",
-            idPlaceholder: "ID to connect...",
-            connectBtn: "CONNECT",
-            voiceCall: "VOICE CALL",
-            secureChat: "Secure and end-to-end encrypted chat.",
-            enterId: "Enter an ID to connect.",
-            msgPlaceholder: "Type your message...",
-            online: "ONLINE",
-            calling: "CALLING...",
-            closeCall: "HANG UP",
-            typing: "is typing...",
-            callAlert: "Incoming call!",
-            sosBtn: "🚨 EMERGENCY SOS",
-            sosCooldown: "seconds wait",
-            sosReceived: "EMERGENCY SOS RECEIVED",
-            sosFrom: "From",
-            sosHops: "hops away",
-            sosNoConn: "Nobody connected! Connect to someone first."
-        },
-        ru: {
-            myName: "МОЕ ИМЯ",
-            idPlaceholder: "ID для связи...",
-            connectBtn: "ПОДКЛЮЧИТЬ",
-            voiceCall: "ГОЛОСОВОЙ ВЫЗОВ",
-            secureChat: "Безопасный чат с шифрованием.",
-            enterId: "Введите ID для подключения.",
-            msgPlaceholder: "Введите сообщение...",
-            online: "В СЕТИ",
-            calling: "ЗВОНОК...",
-            closeCall: "СБРОСИТЬ",
-            typing: "пишет...",
-            callAlert: "Входящий звонок!",
-            sosBtn: "🚨 ЭКСТРЕННЫЙ SOS",
-            sosCooldown: "сек ожидание",
-            sosReceived: "ПОЛУЧЕН СИГНАЛ SOS",
-            sosFrom: "От",
-            sosHops: "прыжков",
-            sosNoConn: "Нет подключений! Сначала подключитесь."
-        },
-        de: {
-            myName: "MEIN NAME",
-            idPlaceholder: "ID zum Verbinden...",
-            connectBtn: "VERBINDEN",
-            voiceCall: "ANRUFEN",
-            secureChat: "Sicherer und verschlüsselter Chat.",
-            enterId: "Geben Sie eine ID ein.",
-            msgPlaceholder: "Nachricht schreiben...",
-            online: "ONLINE",
-            calling: "ANRUF...",
-            closeCall: "AUFLEGEN",
-            typing: "schreibt...",
-            callAlert: "Eingehender Anruf!",
-            sosBtn: "🚨 NOTFALL SOS",
-            sosCooldown: "Sek warten",
-            sosReceived: "NOTFALL SOS EMPFANGEN",
-            sosFrom: "Von",
-            sosHops: "Hops entfernt",
-            sosNoConn: "Niemand verbunden! Zuerst verbinden."
-        }
-    };
+    const i18n = {
+        tr: {
+            myName: "ADIM",
+            idPlaceholder: "Bağlanılacak ID...",
+            connectBtn: "BAĞLAN",
+            voiceCall: "SESLİ ARA",
+            secureChat: "Güvenli ve şifreli uçtan uca sohbet.",
+            enterId: "Bağlanmak için bir ID girin.",
+            msgPlaceholder: "Mesajınızı yazın...",
+            online: "ÇEVRİMİÇİ",
+            calling: "ARANIYOR...",
+            closeCall: "KAPAT",
+            typing: "yazıyor...",
+            callAlert: "Arama geliyor!",
+            sosBtn: "🚨 ACİL YARDIM",
+            sosCooldown: "saniye bekle",
+            sosReceived: "ACİL YARDIM ÇAĞRISI",
+            sosFrom: "Gönderen",
+            sosHops: "ağ üzerinden ulaştı",
+            sosNoConn: "Bağlı kimse yok! Önce birine bağlan."
+        },
+        en: {
+            myName: "MY NAME",
+            idPlaceholder: "ID to connect...",
+            connectBtn: "CONNECT",
+            voiceCall: "VOICE CALL",
+            secureChat: "Secure and end-to-end encrypted chat.",
+            enterId: "Enter an ID to connect.",
+            msgPlaceholder: "Type your message...",
+            online: "ONLINE",
+            calling: "CALLING...",
+            closeCall: "HANG UP",
+            typing: "is typing...",
+            callAlert: "Incoming call!",
+            sosBtn: "🚨 EMERGENCY SOS",
+            sosCooldown: "seconds wait",
+            sosReceived: "EMERGENCY SOS RECEIVED",
+            sosFrom: "From",
+            sosHops: "hops away",
+            sosNoConn: "Nobody connected! Connect to someone first."
+        },
+        ru: {
+            myName: "МОЕ ИМЯ",
+            idPlaceholder: "ID для связи...",
+            connectBtn: "ПОДКЛЮЧИТЬ",
+            voiceCall: "ГОЛОСОВОЙ ВЫЗОВ",
+            secureChat: "Безопасный чат с шифрованием.",
+            enterId: "Введите ID для подключения.",
+            msgPlaceholder: "Введите сообщение...",
+            online: "В СЕТИ",
+            calling: "ЗВОНОК...",
+            closeCall: "СБРОСИТЬ",
+            typing: "пишет...",
+            callAlert: "Входящий звонок!",
+            sosBtn: "🚨 ЭКСТРЕННЫЙ SOS",
+            sosCooldown: "сек ожидание",
+            sosReceived: "ПОЛУЧЕН СИГНАЛ SOS",
+            sosFrom: "От",
+            sosHops: "прыжков",
+            sosNoConn: "Нет подключений! Сначала подключитесь."
+        },
+        de: {
+            myName: "MEIN NAME",
+            idPlaceholder: "ID zum Verbinden...",
+            connectBtn: "VERBINDEN",
+            voiceCall: "ANRUFEN",
+            secureChat: "Sicherer und verschlüsselter Chat.",
+            enterId: "Geben Sie eine ID ein.",
+            msgPlaceholder: "Nachricht schreiben...",
+            online: "ONLINE",
+            calling: "ANRUF...",
+            closeCall: "AUFLEGEN",
+            typing: "schreibt...",
+            callAlert: "Eingehender Anruf!",
+            sosBtn: "🚨 NOTFALL SOS",
+            sosCooldown: "Sek warten",
+            sosReceived: "NOTFALL SOS EMPFANGEN",
+            sosFrom: "Von",
+            sosHops: "Hops entfernt",
+            sosNoConn: "Niemand verbunden! Zuerst verbinden."
+        }
+    };
 
-    let currentLang = 'tr';
-    let isLightMode = false;
+    let currentLang = 'tr';
+    let isLightMode = false;
 
-    function toggleTheme() {
-        isLightMode = !isLightMode;
-        document.body.classList.toggle('dark-chat', isLightMode);
-        const btn = document.getElementById('theme-btn');
-        if (isLightMode) {
-            btn.innerText = '☀️ Açık Mod';
-            btn.classList.add('active');
-        } else {
-            btn.innerText = '🌙 Koyu Mod';
-            btn.classList.remove('active');
-        }
-    }
+    function toggleTheme() {
+        isLightMode = !isLightMode;
+        document.body.classList.toggle('dark-chat', isLightMode);
+        const btn = document.getElementById('theme-btn');
+        if (isLightMode) {
+            btn.innerText = '☀️ Açık Mod';
+            btn.classList.add('active');
+        } else {
+            btn.innerText = '🌙 Koyu Mod';
+            btn.classList.remove('active');
+        }
+    }
 
-    function setLanguage(lang) {
-        currentLang = lang;
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            const btnLang = btn.getAttribute('onclick').match(/'(\w+)'/)[1];
-            btn.classList.toggle('active', btnLang === lang);
-        });
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if(i18n[lang][key]) el.innerText = i18n[lang][key];
-        });
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-            const key = el.getAttribute('data-i18n-placeholder');
-            el.placeholder = i18n[lang][key];
-        });
-    }
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            const btnLang = btn.getAttribute('onclick').match(/'(\w+)'/)[1];
+            btn.classList.toggle('active', btnLang === lang);
+        });
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(i18n[lang][key]) el.innerText = i18n[lang][key];
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            el.placeholder = i18n[lang][key];
+        });
+    }
 
-    window.addEventListener('load', () => setTimeout(() => document.body.classList.add('loaded'), 2500));
+    window.addEventListener('load', () => setTimeout(() => document.body.classList.add('loaded'), 2500));
 
-    const peer = new Peer();
-    let connections = [];
-    let peerNames = {}; 
-    let currentCall = null;
-    let typingTimeout = null;
+    const peer = new Peer();
+    let connections = [];
+    let peerNames = {}; 
+    let currentCall = null;
+    let typingTimeout = null;
 
-    peer.on('open', id => document.getElementById('my-id').innerText = id);
-    peer.on('connection', conn => setupConn(conn));
+    peer.on('open', id => document.getElementById('my-id').innerText = id);
+    peer.on('connection', conn => setupConn(conn));
 
-    function connectToPeer() {
-        const pid = document.getElementById('peer-id-input').value;
-        if(!pid || connections.find(c => c.peer === pid)) return;
-        setupConn(peer.connect(pid));
-    }
+    function connectToPeer() {
+        const pid = document.getElementById('peer-id-input').value;
+        if(!pid || connections.find(c => c.peer === pid)) return;
+        setupConn(peer.connect(pid));
+    }
 
-    function setupConn(conn) {
-        conn.on('open', () => {
-            if(!connections.find(c => c.peer === conn.peer)) {
-                connections.push(conn);
-                const myName = document.getElementById('my-name-input').value;
-                conn.send({type: 'profile', name: myName});
-                updateUI();
-            }
-        });
-        conn.on('data', data => {
-            if(data.type === 'profile') { peerNames[conn.peer] = data.name; updateUI(); }
-            else if(data.type === 'msg') { 
-                playAudio('snd-msg'); 
-                addMessage(data.name, parseMarkdown(data.body), 'remote', data.time);
-                conn.send({type: 'seen', msgId: data.time}); 
-            }
-            else if(data.type === 'seen') { markAsSeen(data.msgId); }
-            else if(data.type === 'typing') { showTyping(data.name, data.state); }
-            else if(data.type === 'sos') { handleSOS(data); }
-        });
-        conn.on('close', () => {
-            connections = connections.filter(c => c.peer !== conn.peer);
-            delete peerNames[conn.peer];
-            updateUI();
-        });
-    }
+    function setupConn(conn) {
+        conn.on('open', () => {
+            if(!connections.find(c => c.peer === conn.peer)) {
+                connections.push(conn);
+                const myName = document.getElementById('my-name-input').value;
+                conn.send({type: 'profile', name: myName});
+                updateUI();
+            }
+        });
+        conn.on('data', data => {
+            if(data.type === 'profile') { peerNames[conn.peer] = data.name; updateUI(); }
+            else if(data.type === 'msg') { 
+                playAudio('snd-msg'); 
+                addMessage(data.name, parseMarkdown(data.body), 'remote', data.time);
+                conn.send({type: 'seen', msgId: data.time}); 
+            }
+            else if(data.type === 'seen') { markAsSeen(data.msgId); }
+            else if(data.type === 'typing') { showTyping(data.name, data.state); }
+            else if(data.type === 'sos') { handleSOS(data); }
+        });
+        conn.on('close', () => {
+            connections = connections.filter(c => c.peer !== conn.peer);
+            delete peerNames[conn.peer];
+            updateUI();
+        });
+    }
 
-    const seenSOS = new Set();
-    let sosCooldownTimer = null;
-    const SOS_COOLDOWN = 60;
+    const seenSOS = new Set();
+    let sosCooldownTimer = null;
+    const SOS_COOLDOWN = 60;
 
-    function sendSOS() {
-        if(connections.length === 0) {
-            alert(i18n[currentLang].sosNoConn);
-            return;
-        }
+    function sendSOS() {
+        if(connections.length === 0) {
+            alert(i18n[currentLang].sosNoConn);
+            return;
+        }
 
-        const myName = document.getElementById('my-name-input').value;
-        const myId   = document.getElementById('my-id').innerText;
-        const sosId  = myId + '_' + Date.now();
+        const myName = document.getElementById('my-name-input').value;
+        const myId   = document.getElementById('my-id').innerText;
+        const sosId  = myId + '_' + Date.now();
 
-        const sosPacket = {
-            type:      'sos',
-            id:        sosId,
-            fromId:    myId,
-            fromName:  myName,
-            ttl:       5,
-            hopCount:  0,
-            timestamp: Date.now()
-        };
+        const sosPacket = {
+            type:      'sos',
+            id:        sosId,
+            fromId:    myId,
+            fromName:  myName,
+            ttl:       5,
+            hopCount:  0,
+            timestamp: Date.now()
+        };
 
-        seenSOS.add(sosId);
-        addSOSMessage(myName, 0, true);
-        connections.forEach(c => c.send(sosPacket));
-        startSOSCooldown();
-    }
+        seenSOS.add(sosId);
+        addSOSMessage(myName, 0, true);
+        connections.forEach(c => c.send(sosPacket));
+        startSOSCooldown();
+    }
 
-    function handleSOS(data) {
-        if(seenSOS.has(data.id)) return;
-        if(data.ttl <= 0) return;
+    function handleSOS(data) {
+        if(seenSOS.has(data.id)) return;
+        if(data.ttl <= 0) return;
 
-        seenSOS.add(data.id);
-        playAudio('snd-sos');
-        addSOSMessage(data.fromName, data.hopCount + 1, false);
+        seenSOS.add(data.id);
+        playAudio('snd-sos');
+        addSOSMessage(data.fromName, data.hopCount + 1, false);
 
-        const forwardPacket = {
-            ...data,
-            ttl:      data.ttl - 1,
-            hopCount: data.hopCount + 1
-        };
-        connections.forEach(c => c.send(forwardPacket));
-    }
+        const forwardPacket = {
+            ...data,
+            ttl:      data.ttl - 1,
+            hopCount: data.hopCount + 1
+        };
+        connections.forEach(c => c.send(forwardPacket));
+    }
 
-    function addSOSMessage(fromName, hops, isSelf) {
-        const box  = document.getElementById('chat-box');
-        const lang = i18n[currentLang];
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    function addSOSMessage(fromName, hops, isSelf) {
+        const box  = document.getElementById('chat-box');
+        const lang = i18n[currentLang];
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        const hopText = hops > 0
-            ? `<div class="sos-hop">↳ ${hops} ${lang.sosHops}</div>`
-            : '';
+        const hopText = hops > 0
+            ? `<div class="sos-hop">↳ ${hops} ${lang.sosHops}</div>`
+            : '';
 
-        box.innerHTML += `
-            <div class="msg msg-sos">
-                <div class="sos-label">⚠ ${lang.sosReceived}</div>
-                <b style="font-size:15px;">${isSelf ? '🆘 ' + fromName : '🚨 ' + fromName}</b>
-                <div class="sos-from">${lang.sosFrom}: ${fromName}</div>
-                ${hopText}
-                <div class="msg-meta" style="color:#884444;">${time}</div>
-            </div>`;
-        box.scrollTop = box.scrollHeight;
+        box.innerHTML += `
+            <div class="msg msg-sos">
+                <div class="sos-label">⚠ ${lang.sosReceived}</div>
+                <b style="font-size:15px;">${isSelf ? '🆘 ' + fromName : '🚨 ' + fromName}</b>
+                <div class="sos-from">${lang.sosFrom}: ${fromName}</div>
+                ${hopText}
+                <div class="msg-meta" style="color:#884444;">${time}</div>
+            </div>`;
+        box.scrollTop = box.scrollHeight;
 
-        document.title = `🚨 SOS – ${fromName} | AceTalk`;
-        setTimeout(() => document.title = 'AceTalk | Simple Messenger', 8000);
-    }
+        document.title = `🚨 SOS – ${fromName} | AceTalk`;
+        setTimeout(() => document.title = 'AceTalk | Simple Messenger', 8000);
+    }
 
-    function startSOSCooldown() {
-        const btn       = document.getElementById('sos-btn');
-        const timerEl   = document.getElementById('sos-timer');
-        btn.disabled    = true;
-        let remaining   = SOS_COOLDOWN;
+    function startSOSCooldown() {
+        const btn       = document.getElementById('sos-btn');
+        const timerEl   = document.getElementById('sos-timer');
+        btn.disabled    = true;
+        let remaining   = SOS_COOLDOWN;
 
-        timerEl.innerText = `${remaining} ${i18n[currentLang].sosCooldown}`;
+        timerEl.innerText = `${remaining} ${i18n[currentLang].sosCooldown}`;
 
-        sosCooldownTimer = setInterval(() => {
-            remaining--;
-            if(remaining <= 0) {
-                clearInterval(sosCooldownTimer);
-                btn.disabled    = false;
-                timerEl.innerText = '';
-                btn.innerText   = i18n[currentLang].sosBtn;
-            } else {
-                timerEl.innerText = `${remaining} ${i18n[currentLang].sosCooldown}`;
-            }
-        }, 1000);
-    }
+        sosCooldownTimer = setInterval(() => {
+            remaining--;
+            if(remaining <= 0) {
+                clearInterval(sosCooldownTimer);
+                btn.disabled    = false;
+                timerEl.innerText = '';
+                btn.innerText   = i18n[currentLang].sosBtn;
+            } else {
+                timerEl.innerText = `${remaining} ${i18n[currentLang].sosCooldown}`;
+            }
+        }, 1000);
+    }
 
-    function parseMarkdown(text) {
-        return text
-            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-            .replace(/\*(.*?)\*/g, '<i>$1</i>')
-            .replace(/~~(.*?)~~/g, '<s>$1</s>')
-            .replace(/`(.*?)`/g, '<code>$1</code>');
-    }
+    function parseMarkdown(text) {
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\*(.*?)\*/g, '<i>$1</i>')
+            .replace(/~~(.*?)~~/g, '<s>$1</s>')
+            .replace(/`(.*?)`/g, '<code>$1</code>');
+    }
 
-    function updateMyProfile() {
-        const myName = document.getElementById('my-name-input').value;
-        connections.forEach(c => c.send({type: 'profile', name: myName}));
-    }
+    function updateMyProfile() {
+        const myName = document.getElementById('my-name-input').value;
+        connections.forEach(c => c.send({type: 'profile', name: myName}));
+    }
 
-    function sendMessage() {
-        const input = document.getElementById('message-input');
-        const myName = document.getElementById('my-name-input').value;
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        if(input.value.trim() === "") return;
-        
-        connections.forEach(c => c.send({type: 'msg', name: myName, body: input.value, time: time}));
-        addMessage("", parseMarkdown(input.value), 'local', time);
-        input.value = "";
-        notifyTyping(false);
-    }
+    function sendMessage() {
+        const input = document.getElementById('message-input');
+        const myName = document.getElementById('my-name-input').value;
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        if(input.value.trim() === "") return;
+        
+        connections.forEach(c => c.send({type: 'msg', name: myName, body: input.value, time: time}));
+        addMessage("", parseMarkdown(input.value), 'local', time);
+        input.value = "";
+        notifyTyping(false);
+    }
 
-    function addMessage(user, text, type, time) {
-        const box = document.getElementById('chat-box');
-        const displayTime = time.substring(0, 5);
-        const id = time.replace(/:/g, '');
-        
-        box.innerHTML += `
-            <div class="msg ${type}">
-                ${user ? `<strong>${user}</strong><br>` : ''}
-                ${text}
-                <div class="msg-meta">
-                    ${displayTime} 
-                    ${type === 'local' ? `<span id="seen-${id}" style="margin-left:4px;">✔</span>` : ''}
-                </div>
-            </div>`;
-        box.scrollTop = box.scrollHeight;
-    }
+    function addMessage(user, text, type, time) {
+        const box = document.getElementById('chat-box');
+        const displayTime = time.substring(0, 5);
+        const id = time.replace(/:/g, '');
+        
+        box.innerHTML += `
+            <div class="msg ${type}">
+                ${user ? `<strong>${user}</strong><br>` : ''}
+                ${text}
+                <div class="msg-meta">
+                    ${displayTime} 
+                    ${type === 'local' ? `<span id="seen-${id}" style="margin-left:4px;">✔</span>` : ''}
+                </div>
+            </div>`;
+        box.scrollTop = box.scrollHeight;
+    }
 
-    function markAsSeen(time) {
-        const id = time.replace(/:/g, '');
-        const el = document.getElementById(`seen-${id}`);
-        if(el) { el.innerHTML = '✔✔'; el.classList.add('seen-icon'); }
-    }
+    function markAsSeen(time) {
+        const id = time.replace(/:/g, '');
+        const el = document.getElementById(`seen-${id}`);
+        if(el) { el.innerHTML = '✔✔'; el.classList.add('seen-icon'); }
+    }
 
-    function handleImage(input) {
-        if(input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                const imgHtml = `<img src="${e.target.result}" style="max-width:100%; border-radius:2px; margin-top:5px; display:block;">`;
-                sendSpecialMessage(imgHtml);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+    function handleImage(input) {
+        if(input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const imgHtml = `<img src="${e.target.result}" style="max-width:100%; border-radius:2px; margin-top:5px; display:block;">`;
+                sendSpecialMessage(imgHtml);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
-    function sendSpecialMessage(content) {
-        const myName = document.getElementById('my-name-input').value;
-        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        connections.forEach(c => c.send({type: 'msg', name: myName, body: content, time: time}));
-        addMessage("", content, 'local', time);
-    }
+    function sendSpecialMessage(content) {
+        const myName = document.getElementById('my-name-input').value;
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        connections.forEach(c => c.send({type: 'msg', name: myName, body: content, time: time}));
+        addMessage("", content, 'local', time);
+    }
 
-    function notifyTyping(state = true) {
-        const myName = document.getElementById('my-name-input').value;
-        connections.forEach(c => c.send({type: 'typing', name: myName, state: state}));
-        if(state) {
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => notifyTyping(false), 3000);
-        }
-    }
+    function notifyTyping(state = true) {
+        const myName = document.getElementById('my-name-input').value;
+        connections.forEach(c => c.send({type: 'typing', name: myName, state: state}));
+        if(state) {
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => notifyTyping(false), 3000);
+        }
+    }
 
-    function showTyping(name, state) {
-        const ui = document.getElementById('typing-ui');
-        if(state) {
-            ui.innerText = `${name} ${i18n[currentLang].typing}`;
-            ui.style.display = 'block';
-        } else {
-            ui.style.display = 'none';
-        }
-    }
+    function showTyping(name, state) {
+        const ui = document.getElementById('typing-ui');
+        if(state) {
+            ui.innerText = `${name} ${i18n[currentLang].typing}`;
+            ui.style.display = 'block';
+        } else {
+            ui.style.display = 'none';
+        }
+    }
 
-    function updateUI() {
-        document.getElementById('conn-count').innerText = connections.length;
-        const list = document.getElementById('online-list');
-        list.innerHTML = "";
-        connections.forEach(c => {
-            const displayName = peerNames[c.peer] || "Bağlanıyor...";
-            list.innerHTML += `
-                <div class="user-card" style="flex-direction:column; align-items:flex-start; gap:2px;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <div class="user-avatar" style="background:${stringToColor(c.peer)}">${displayName.charAt(0).toUpperCase()}</div>
-                        <div class="user-name">${displayName}</div>
-                    </div>
-                    <div style="font-size:9px; color:#7f8c8d; word-break:break-all; padding-left:2px; cursor:pointer; font-family:monospace;" onclick="navigator.clipboard.writeText('${c.peer}').then(()=>this.style.color='#00aff0').catch(()=>{})" title="Kopyalamak için tıkla">${c.peer}</div>
-                </div>`;
-        });
-    }
-
-    function stringToColor(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        return `hsl(${hash % 360}, 60%, 50%)`;
-    }
-
-    function playAudio(id) { const a = document.getElementById(id); a.currentTime = 0; a.play().catch(()=>{}); }
-
-    peer.on('call', call => { 
-        if(confirm(i18n[currentLang].callAlert)) { 
-            navigator.mediaDevices.getUserMedia({audio:true}).then(s => { call.answer(s); startCallUI(call, s); }); 
-        } 
-    });
-    
-    function startCall() { 
-        const pid = document.getElementById('peer-id-input').value;
-        if(pid) navigator.mediaDevices.getUserMedia({audio:true}).then(s => startCallUI(peer.call(pid, s), s));
-    }
-    
-    function startCallUI(call, s) { 
-        currentCall = call; playAudio('snd-call'); document.getElementById('call-overlay').style.display='flex';
-        call.on('stream', rs => { document.getElementById('snd-call').pause(); document.getElementById('remote-audio').srcObject = rs; });
-    }
-    
-    function endCall() { if(currentCall) currentCall.close(); location.reload(); }
-</script>
-</body>
-</html>
+    function updateUI() {
+        document.getElementById('conn-count').innerText = connections.length;
+        const list = document.getElementById('online-list');
+        list.innerHTML = "";
+        connections.forEach(c => {
+            const displayName = peerNames[c.peer] || "Bağlanıyor...";
+            list.innerHTML += `
+                <div class="user-card" style="flex-direction:column; align-items:flex-start; gap:2px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div class="user-avatar" style="background:${stringToColor(c.peer)}">${displayName.charAt(0).toUpperCase()}</div>
+                        <div class="user-name">${displayName}</div>
+                 
